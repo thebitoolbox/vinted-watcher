@@ -1,0 +1,14 @@
+{
+  "searches": [
+    {
+      "name": "Jellycat do 150 PLN",
+      "url": "https://www.vinted.pl/catalog?search_text=Jellycat&price_from=0&price_to=150&currency=PLN",
+      "enabled": true
+    },
+    {
+      "name": "Jellycat do 100 PLN",
+      "url": "https://www.vinted.pl/catalog?search_text=Jellycat&price_from=0&price_to=100&currency=PLN",
+      "enabled": false
+    }
+  ]
+}
