@@ -1,15 +1,17 @@
+import html
 import json
 import os
 import re
 import time
 from pathlib import Path
-from typing import Dict, List, Set
+from typing import Dict, List, Set, Tuple
 
 import requests
 from bs4 import BeautifulSoup
 
 STATE_FILE = Path("seen_items.json")
-SEARCH_URL = os.getenv("VINTED_SEARCH_URL", "").strip()
+CONFIG_FILE = Path("watch_config.json")
+
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
 USER_AGENT = os.getenv(
@@ -20,21 +22,37 @@ TIMEOUT = int(os.getenv("HTTP_TIMEOUT", "30"))
 MAX_ALERTS = int(os.getenv("MAX_ALERTS", "10"))
 
 
-def load_seen_items() -> Set[str]:
+def load_config() -> List[Dict[str, str]]:
+    if not CONFIG_FILE.exists():
+        raise FileNotFoundError("Brak pliku watch_config.json")
+
+    with CONFIG_FILE.open("r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    searches = data.get("searches", [])
+    active = [s for s in searches if s.get("enabled", True) and s.get("url")]
+
+    if not active:
+        raise ValueError("Brak aktywnych wyszukiwań w watch_config.json")
+
+    return active
+
+
+def load_seen_items() -> Dict[str, List[str]]:
     if not STATE_FILE.exists():
-        return set()
+        return {}
 
     try:
         data = json.loads(STATE_FILE.read_text(encoding="utf-8"))
-        return set(data.get("seen_ids", []))
+        return data.get("seen_by_search", {})
     except Exception:
-        return set()
+        return {}
 
 
-def save_seen_items(item_ids: Set[str]) -> None:
+def save_seen_items(seen_by_search: Dict[str, Set[str]]) -> None:
     payload = {
         "updated_at": int(time.time()),
-        "seen_ids": sorted(item_ids),
+        "seen_by_search": {k: sorted(v) for k, v in seen_by_search.items()},
     }
     STATE_FILE.write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
@@ -43,14 +61,10 @@ def save_seen_items(item_ids: Set[str]) -> None:
 
 
 def fetch_vinted_page(url: str) -> str:
-    if not url:
-        raise ValueError("Brak VINTED_SEARCH_URL w zmiennych środowiskowych.")
-
     headers = {
         "User-Agent": USER_AGENT,
         "Accept-Language": "pl-PL,pl;q=0.9,en;q=0.8",
     }
-
     response = requests.get(url, headers=headers, timeout=TIMEOUT)
     response.raise_for_status()
     return response.text
@@ -64,8 +78,8 @@ def absolute_url(href: str) -> str:
     return f"https://www.vinted.pl/{href.lstrip('/')}"
 
 
-def extract_items(html: str) -> List[Dict[str, str]]:
-    soup = BeautifulSoup(html, "lxml")
+def extract_items(html_text: str) -> List[Dict[str, str]]:
+    soup = BeautifulSoup(html_text, "lxml")
     items: List[Dict[str, str]] = []
     seen_ids = set()
 
@@ -99,7 +113,6 @@ def extract_items(html: str) -> List[Dict[str, str]]:
                 "id": item_id,
                 "title": title[:180],
                 "url": url,
-                "price": "",
             }
         )
 
@@ -114,6 +127,7 @@ def send_telegram_message(message: str) -> None:
     payload = {
         "chat_id": CHAT_ID,
         "text": message,
+        "parse_mode": "HTML",
         "disable_web_page_preview": True,
     }
 
@@ -121,12 +135,15 @@ def send_telegram_message(message: str) -> None:
     response.raise_for_status()
 
 
-def build_message(new_items: List[Dict[str, str]]) -> str:
-    lines = [f"🛍️ Vinted watcher: {len(new_items)} nowych ofert"]
+def build_message(search_name: str, new_items: List[Dict[str, str]]) -> str:
+    lines = [
+        f"🛍️ <b>{html.escape(search_name)}</b>",
+        f"Nowe oferty: <b>{len(new_items)}</b>"
+    ]
 
     for item in new_items[:MAX_ALERTS]:
         lines.append("")
-        lines.append(f"• {item['title']}")
+        lines.append(f"• {html.escape(item['title'])}")
         lines.append(item["url"])
 
     if len(new_items) > MAX_ALERTS:
@@ -136,32 +153,52 @@ def build_message(new_items: List[Dict[str, str]]) -> str:
     return "\n".join(lines)
 
 
+def normalize_search_key(search: Dict[str, str]) -> str:
+    return search.get("name") or search["url"]
+
+
 def main() -> None:
-    html = fetch_vinted_page(SEARCH_URL)
-    current_items = extract_items(html)
+    searches = load_config()
+    seen_raw = load_seen_items()
+    seen_by_search: Dict[str, Set[str]] = {
+        key: set(values) for key, values in seen_raw.items()
+    }
 
-    if not current_items:
-        print("=== HTML DEBUG START ===")
-        print(html[:2000])
-        print("=== HTML DEBUG END ===")
-        raise RuntimeError(
-            "Nie udało się wyciągnąć ofert. Sprawdź HTML zwrócony przez Vinted i selektory w extract_items()."
-        )
+    any_new = 0
 
-    seen_ids = load_seen_items()
-    current_ids = {item["id"] for item in current_items}
-    new_items = [item for item in current_items if item["id"] not in seen_ids]
+    for search in searches:
+        search_name = search.get("name", "Bez nazwy")
+        search_url = search["url"]
+        search_key = normalize_search_key(search)
 
-    if not seen_ids:
-        save_seen_items(current_ids)
-        print("Pierwsze uruchomienie: zapisano stan bez wysyłania alertu.")
-        return
+        html_text = fetch_vinted_page(search_url)
+        items = extract_items(html_text)
 
-    if new_items:
-        send_telegram_message(build_message(new_items))
+        if not items:
+            print(f"[WARN] Brak ofert dla: {search_name}")
+            print("=== HTML DEBUG START ===")
+            print(html_text[:2000])
+            print("=== HTML DEBUG END ===")
+            continue
 
-    save_seen_items(seen_ids | current_ids)
-    print(f"Znaleziono {len(new_items)} nowych ofert.")
+        current_ids = {item["id"] for item in items}
+        previous_ids = seen_by_search.get(search_key, set())
+        new_items = [item for item in items if item["id"] not in previous_ids]
+
+        if not previous_ids:
+            seen_by_search[search_key] = current_ids
+            print(f"[INIT] {search_name}: zapisano {len(current_ids)} ofert bez alertu.")
+            continue
+
+        if new_items:
+            send_telegram_message(build_message(search_name, new_items))
+            any_new += len(new_items)
+            print(f"[ALERT] {search_name}: {len(new_items)} nowych ofert.")
+
+        seen_by_search[search_key] = previous_ids | current_ids
+
+    save_seen_items(seen_by_search)
+    print(f"Gotowe. Łącznie nowych ofert: {any_new}")
 
 
 if __name__ == "__main__":
