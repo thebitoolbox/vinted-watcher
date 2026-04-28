@@ -132,7 +132,8 @@ def main() -> None:
     html = fetch_vinted_page(SEARCH_URL)
     current_items = extract_items(html)
     if not current_items:
-        raise RuntimeError("Nie udało się wyciągnąć ofert. Sprawdź SEARCH_URL i selektory w extract_items().")
+        print(html[:2000])
+    raise RuntimeError("Nie udało się wyciągnąć ofert. Sprawdź HTML zwrócony przez Vinted i selektory w extract_items().")
 
     seen_ids = load_seen_items()
     current_ids = {item["id"] for item in current_items}
