@@ -1,30 +1,12 @@
 {
   "searches": [
     {
-      "id": "pisa_tower",
-      "name": "Krzywa wieża w Pizie",
-      "base_query": "Krzywa wieża w Pizie",
-      "languages": ["pl", "en", "de", "fr", "it", "es"],
-      "manual_keywords": [
-        "Leaning Tower of Pisa",
-        "Tour de Pise",
-        "Schiefer Turm von Pisa",
-        "Torre di Pisa",
-        "souvenir Pisa",
-        "Pisa figurine",
-        "miniatura Pizy"
-      ],
-      "price_to": 150,
-      "currency": "PLN",
-      "enabled": true
-    },
-    {
-      "id": "lego",
-      "name": "LEGO",
-      "base_query": "LEGO",
+      "id": "1",
+      "name": "Venice",
+      "base_query": "LEGO Venice",
       "languages": [],
       "manual_keywords": [],
-      "price_to": 200,
+      "price_to": 250,
       "currency": "PLN",
       "enabled": true
     }
