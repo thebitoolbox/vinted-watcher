@@ -1,14 +1,32 @@
 {
   "searches": [
     {
-      "name": "Jellycat do 150 PLN",
-      "url": "https://www.vinted.pl/catalog?search_text=Jellycat&price_from=0&price_to=150&currency=PLN",
+      "id": "pisa_tower",
+      "name": "Krzywa wieża w Pizie",
+      "base_query": "Krzywa wieża w Pizie",
+      "languages": ["pl", "en", "de", "fr", "it", "es"],
+      "manual_keywords": [
+        "Leaning Tower of Pisa",
+        "Tour de Pise",
+        "Schiefer Turm von Pisa",
+        "Torre di Pisa",
+        "souvenir Pisa",
+        "Pisa figurine",
+        "miniatura Pizy"
+      ],
+      "price_to": 150,
+      "currency": "PLN",
       "enabled": true
     },
     {
-      "name": "Jellycat do 100 PLN",
-      "url": "https://www.vinted.pl/catalog?search_text=Jellycat&price_from=0&price_to=100&currency=PLN",
-      "enabled": false
+      "id": "lego",
+      "name": "LEGO",
+      "base_query": "LEGO",
+      "languages": [],
+      "manual_keywords": [],
+      "price_to": 200,
+      "currency": "PLN",
+      "enabled": true
     }
   ]
 }
