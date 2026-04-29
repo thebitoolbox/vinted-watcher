@@ -9,6 +9,16 @@
       "price_to": 250,
       "currency": "PLN",
       "enabled": true
+    },
+{
+      "id": "2",
+      "name": "Berlin",
+      "base_query": "LEGO Berlin",
+      "languages": [],
+      "manual_keywords": [],
+      "price_to": 250,
+      "currency": "PLN",
+      "enabled": true
     }
   ]
 }
