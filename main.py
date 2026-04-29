@@ -4,10 +4,11 @@ import os
 import re
 import time
 from pathlib import Path
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List, Set
 
 import requests
 from bs4 import BeautifulSoup
+from deep_translator import GoogleTranslator
 
 STATE_FILE = Path("seen_items.json")
 CONFIG_FILE = Path("watch_config.json")
@@ -20,9 +21,10 @@ USER_AGENT = os.getenv(
 )
 TIMEOUT = int(os.getenv("HTTP_TIMEOUT", "30"))
 MAX_ALERTS = int(os.getenv("MAX_ALERTS", "10"))
+TRANSLATION_ENABLED = os.getenv("TRANSLATION_ENABLED", "true").lower() == "true"
 
 
-def load_config() -> List[Dict[str, str]]:
+def load_config() -> List[Dict]:
     if not CONFIG_FILE.exists():
         raise FileNotFoundError("Brak pliku watch_config.json")
 
@@ -30,7 +32,7 @@ def load_config() -> List[Dict[str, str]]:
         data = json.load(f)
 
     searches = data.get("searches", [])
-    active = [s for s in searches if s.get("enabled", True) and s.get("url")]
+    active = [s for s in searches if s.get("enabled", True)]
 
     if not active:
         raise ValueError("Brak aktywnych wyszukiwań w watch_config.json")
@@ -135,9 +137,10 @@ def send_telegram_message(message: str) -> None:
     response.raise_for_status()
 
 
-def build_message(search_name: str, new_items: List[Dict[str, str]]) -> str:
+def build_message(search_name: str, variant_label: str, new_items: List[Dict[str, str]]) -> str:
     lines = [
         f"🛍️ <b>{html.escape(search_name)}</b>",
+        f"Wariant: <b>{html.escape(variant_label)}</b>",
         f"Nowe oferty: <b>{len(new_items)}</b>"
     ]
 
@@ -153,8 +156,65 @@ def build_message(search_name: str, new_items: List[Dict[str, str]]) -> str:
     return "\n".join(lines)
 
 
-def normalize_search_key(search: Dict[str, str]) -> str:
-    return search.get("name") or search["url"]
+def build_search_url(query: str, price_to: int | None = None, currency: str = "PLN") -> str:
+    params = {
+        "search_text": query,
+        "currency": currency
+    }
+    if price_to is not None:
+        params["price_from"] = "0"
+        params["price_to"] = str(price_to)
+
+    from urllib.parse import urlencode
+    return f"https://www.vinted.pl/catalog?{urlencode(params)}"
+
+
+def translate_query(base_query: str, languages: List[str]) -> List[str]:
+    if not TRANSLATION_ENABLED or not languages:
+        return []
+
+    variants = []
+    for lang in languages:
+        try:
+            translated = GoogleTranslator(source="auto", target=lang).translate(base_query)
+            if translated:
+                variants.append(translated.strip())
+        except Exception as e:
+            print(f"[WARN] Translation failed for '{base_query}' -> {lang}: {e}")
+
+    return variants
+
+
+def unique_preserve_order(values: List[str]) -> List[str]:
+    seen = set()
+    result = []
+    for value in values:
+        cleaned = re.sub(r"\s+", " ", value.strip())
+        if not cleaned:
+            continue
+        key = cleaned.casefold()
+        if key in seen:
+            continue
+        seen.add(key)
+        result.append(cleaned)
+    return result
+
+
+def expand_keywords(search: Dict) -> List[str]:
+    base_query = search.get("base_query", "").strip()
+    manual_keywords = search.get("manual_keywords", [])
+    languages = search.get("languages", [])
+
+    translated = translate_query(base_query, languages) if base_query else []
+    combined = []
+
+    if base_query:
+        combined.append(base_query)
+
+    combined.extend(translated)
+    combined.extend(manual_keywords)
+
+    return unique_preserve_order(combined)
 
 
 def main() -> None:
@@ -164,41 +224,49 @@ def main() -> None:
         key: set(values) for key, values in seen_raw.items()
     }
 
-    any_new = 0
+    total_new = 0
 
     for search in searches:
-        search_name = search.get("name", "Bez nazwy")
-        search_url = search["url"]
-        search_key = normalize_search_key(search)
+        search_id = search["id"]
+        search_name = search.get("name", search_id)
+        price_to = search.get("price_to")
+        currency = search.get("currency", "PLN")
+        keywords = expand_keywords(search)
 
-        html_text = fetch_vinted_page(search_url)
-        items = extract_items(html_text)
-
-        if not items:
-            print(f"[WARN] Brak ofert dla: {search_name}")
-            print("=== HTML DEBUG START ===")
-            print(html_text[:2000])
-            print("=== HTML DEBUG END ===")
+        if not keywords:
+            print(f"[WARN] Brak keywords dla {search_name}")
             continue
 
-        current_ids = {item["id"] for item in items}
-        previous_ids = seen_by_search.get(search_key, set())
-        new_items = [item for item in items if item["id"] not in previous_ids]
+        for keyword in keywords:
+            variant_key = f"{search_id}::{keyword.casefold()}"
+            variant_label = keyword
+            search_url = build_search_url(keyword, price_to=price_to, currency=currency)
 
-        if not previous_ids:
-            seen_by_search[search_key] = current_ids
-            print(f"[INIT] {search_name}: zapisano {len(current_ids)} ofert bez alertu.")
-            continue
+            html_text = fetch_vinted_page(search_url)
+            items = extract_items(html_text)
 
-        if new_items:
-            send_telegram_message(build_message(search_name, new_items))
-            any_new += len(new_items)
-            print(f"[ALERT] {search_name}: {len(new_items)} nowych ofert.")
+            if not items:
+                print(f"[WARN] Brak ofert dla: {search_name} / {keyword}")
+                continue
 
-        seen_by_search[search_key] = previous_ids | current_ids
+            current_ids = {item["id"] for item in items}
+            previous_ids = seen_by_search.get(variant_key, set())
+            new_items = [item for item in items if item["id"] not in previous_ids]
+
+            if not previous_ids:
+                seen_by_search[variant_key] = current_ids
+                print(f"[INIT] {search_name} / {keyword}: zapisano {len(current_ids)} ofert bez alertu.")
+                continue
+
+            if new_items:
+                send_telegram_message(build_message(search_name, variant_label, new_items))
+                total_new += len(new_items)
+                print(f"[ALERT] {search_name} / {keyword}: {len(new_items)} nowych ofert.")
+
+            seen_by_search[variant_key] = previous_ids | current_ids
 
     save_seen_items(seen_by_search)
-    print(f"Gotowe. Łącznie nowych ofert: {any_new}")
+    print(f"Gotowe. Łącznie nowych ofert: {total_new}")
 
 
 if __name__ == "__main__":
