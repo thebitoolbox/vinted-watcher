@@ -2,3 +2,4 @@ requests==2.32.3
 beautifulsoup4==4.12.3
 lxml==5.2.2
 deep-translator==1.11.4
+curl-cffi==0.7.1
