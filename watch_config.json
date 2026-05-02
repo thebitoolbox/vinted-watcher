@@ -17,7 +17,7 @@
       "base_query": "21000",
       "languages": [],
       "manual_keywords": ["21000", "Lego 21000", "21000 Lego", "Architecture 21000", "Sears Tower", "Willis Tower", "Sears Tower 21000", "Willis Tower 21000"],
-"brand_ids": [89162],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -39,7 +39,7 @@
       "base_query": "21001",
       "languages": [],
       "manual_keywords": ["21001", "Lego 21001", "21001 Lego", "Architecture 21001", "John Hancock Center", "John Hancock Center 21001"],
-"brand_ids": [89162],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -61,7 +61,7 @@
       "base_query": "21003",
       "languages": [],
       "manual_keywords": ["21003", "Lego 21003", "21003 Lego", "Architecture 21003", "Seattle Space Needle", "Seattle Space Needle 21003", "Space Needle"],
-"brand_ids": [89162],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -83,6 +83,7 @@
       "base_query": "21004",
       "languages": [],
       "manual_keywords": ["21004", "Lego 21004", "21004 Lego", "Architecture 21004", "Solomon R. Guggenheim Museum", "Guggenheim Museum", "Guggenheim", "21004 Guggenheim"],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -104,6 +105,7 @@
       "base_query": "21005",
       "languages": [],
       "manual_keywords": ["21005", "Lego 21005", "21005 Lego", "Architecture 21005", "Fallingwater", "Fallingwater 21005"],
+      "brand_ids": [89162],
       "price_to": 800,
       "currency": "PLN",
       "enabled": true
@@ -126,6 +128,7 @@
       "base_query": "21006",
       "languages": [],
       "manual_keywords": ["21006", "Lego 21006", "21006 Lego", "Architecture 21006", "The White House", "White House", "Biały Dom", "21006 White House"],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -148,6 +151,7 @@
       "base_query": "21007",
       "languages": [],
       "manual_keywords": ["21007", "Lego 21007", "21007 Lego", "Architecture 21007", "Rockefeller Center", "21007 Rockefeller Center"],
+      "brand_ids": [89162],
       "price_to": 800,
       "currency": "PLN",
       "enabled": true
@@ -170,6 +174,8 @@
       "base_query": "21008",
       "languages": [],
       "manual_keywords": ["21008", "Lego 21008", "21008 Lego", "Architecture 21008", "Burj Khalifa", "Burdż Chalifa", "21008 Burj Khalifa"],
+"brand_ids": [89162],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -192,6 +198,7 @@
       "base_query": "21009",
       "languages": [],
       "manual_keywords": ["21009", "Lego 21009", "21009 Lego", "Architecture 21009", "Farnsworth House", "21009 Farnsworth House"],
+      "brand_ids": [89162],
       "price_to": 400,
       "currency": "PLN",
       "enabled": true
@@ -214,6 +221,7 @@
       "base_query": "21010",
       "languages": [],
       "manual_keywords": ["21010", "Lego 21010", "21010 Lego", "Architecture 21010", "Robie House", "21010 Robie House"],
+      "brand_ids": [89162],
       "price_to": 1000,
       "currency": "PLN",
       "enabled": true
@@ -236,6 +244,7 @@
       "base_query": "21011",
       "languages": [],
       "manual_keywords": ["21011", "Lego 21011", "21011 Lego", "Architecture 21011", "Brama Brandenburska", "Brandenburg Gate", "21011 Brandenburg Gate"],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -258,6 +267,7 @@
       "base_query": "21012",
       "languages": [],
       "manual_keywords": ["21012", "Lego 21012", "21012 Lego", "Architecture 21012", "Sydney Opera House", "Opera House", "21012 Sydney Opera House"],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -280,6 +290,7 @@
       "base_query": "21014",
       "languages": [],
       "manual_keywords": ["21014", "Lego 21014", "21014 Lego", "Architecture 21014", "Villa Savoye", "21014 Villa Savoye"],
+      "brand_ids": [89162],
       "price_to": 400,
       "currency": "PLN",
       "enabled": true
@@ -302,6 +313,7 @@
       "base_query": "21015",
       "languages": [],
       "manual_keywords": ["21015", "Lego 21015", "21015 Lego", "Architecture 21015", "Krzywa Wieża w Pizie", "Leaning Tower of Pisa", "Torre di Pisa", "Pisa", "21015 Pisa"],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -324,6 +336,7 @@
       "base_query": "21016",
       "languages": [],
       "manual_keywords": ["21016", "Lego 21016", "21016 Lego", "Architecture 21016", "Sungnyemun", "21016 Sungnyemun"],
+      "brand_ids": [89162],
       "price_to": 500,
       "currency": "PLN",
       "enabled": true
@@ -346,6 +359,7 @@
       "base_query": "21017",
       "languages": [],
       "manual_keywords": ["21017", "Lego 21017", "21017 Lego", "Architecture 21017", "Imperial Hotel", "21017 Imperial Hotel"],
+      "brand_ids": [89162],
       "price_to": 800,
       "currency": "PLN",
       "enabled": true
@@ -368,6 +382,7 @@
       "base_query": "21018",
       "languages": [],
       "manual_keywords": ["21018", "Lego 21018", "21018 Lego", "Architecture 21018", "Kwatera Główna ONZ", "United Nations Headquarters", "UN Headquarters", "21018 UN Headquarters"],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -390,6 +405,7 @@
       "base_query": "21020",
       "languages": [],
       "manual_keywords": ["21020", "Lego 21020", "21020 Lego", "Architecture 21020", "Fontanna di Trevi", "Trevi Fountain", "21020 Trevi Fountain"],
+      "brand_ids": [89162],
       "price_to": 400,
       "currency": "PLN",
       "enabled": true
@@ -412,6 +428,7 @@
       "base_query": "21021",
       "languages": [],
       "manual_keywords": ["21021", "Lego 21021", "21021 Lego", "Architecture 21021", "Marina Bay Sands", "21021 Marina Bay Sands"],
+      "brand_ids": [89162],
       "price_to": 1000,
       "currency": "PLN",
       "enabled": true
@@ -434,6 +451,7 @@
       "base_query": "21022",
       "languages": [],
       "manual_keywords": ["21022", "Lego 21022", "21022 Lego", "Architecture 21022", "Lincoln Memorial", "21022 Lincoln Memorial"],
+      "brand_ids": [89162],
       "price_to": 400,
       "currency": "PLN",
       "enabled": true
@@ -456,6 +474,7 @@
       "base_query": "21023",
       "languages": [],
       "manual_keywords": ["21023", "Lego 21023", "21023 Lego", "Architecture 21023", "Flatiron Building", "21023 Flatiron Building"],
+      "brand_ids": [89162],
       "price_to": 100,
       "currency": "PLN",
       "enabled": true
@@ -478,6 +497,7 @@
       "base_query": "21024",
       "languages": [],
       "manual_keywords": ["21024", "Lego 21024", "21024 Lego", "Architecture 21024", "Luwr", "Louvre", "Le Louvre", "21024 Louvre"],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -500,6 +520,7 @@
       "base_query": "21026",
       "languages": [],
       "manual_keywords": ["21026", "Lego 21026", "21026 Lego", "Architecture 21026", "Wenecja", "Venice", "Venezia", "Wenecja 21026", "Venice 21026", "Venezia 21026"],
+      "brand_ids": [89162],
       "price_to": 300,
       "currency": "PLN",
       "enabled": true
@@ -522,6 +543,7 @@
       "base_query": "21027",
       "languages": [],
       "manual_keywords": ["21027", "Lego 21027", "21027 Lego", "Architecture 21027", "Berlin", "Berlin 21027"],
+      "brand_ids": [89162],
       "price_to": 300,
       "currency": "PLN",
       "enabled": true
@@ -545,6 +567,7 @@
       "base_query": "21029",
       "languages": [],
       "manual_keywords": ["21029", "Lego 21029", "21029 Lego", "Architecture 21029", "Pałac Buckingham", "Buckingham Palace", "21029 Buckingham Palace"],
+      "brand_ids": [89162],
       "price_to": 400,
       "currency": "PLN",
       "enabled": true
@@ -567,6 +590,7 @@
       "base_query": "21030",
       "languages": [],
       "manual_keywords": ["21030", "Lego 21030", "21030 Lego", "Architecture 21030", "Kapitol Stanów Zjednoczonych", "United States Capitol", "US Capitol", "21030 Capitol"],
+      "brand_ids": [89162],
       "price_to": 400,
       "currency": "PLN",
       "enabled": true
@@ -589,6 +613,7 @@
       "base_query": "21031",
       "languages": [],
       "manual_keywords": ["21031", "Lego 21031", "21031 Lego", "Architecture 21031", "Burj Khalifa", "Burdż Chalifa", "21031 Burj Khalifa"],
+      "brand_ids": [89162],
       "price_to": 400,
       "currency": "PLN",
       "enabled": true
@@ -611,6 +636,7 @@
       "base_query": "21032",
       "languages": [],
       "manual_keywords": ["21032", "Lego 21032", "21032 Lego", "Architecture 21032", "Sydney", "Sydney 21032"],
+      "brand_ids": [89162],
       "price_to": 300,
       "currency": "PLN",
       "enabled": true
@@ -633,6 +659,7 @@
       "base_query": "21033",
       "languages": [],
       "manual_keywords": ["21033", "Lego 21033", "21033 Lego", "Architecture 21033", "Chicago", "Chicago 21033"],
+      "brand_ids": [89162],
       "price_to": 300,
       "currency": "PLN",
       "enabled": true
@@ -656,6 +683,7 @@
       "base_query": "21035",
       "languages": [],
       "manual_keywords": ["21035", "Lego 21035", "21035 Lego", "Architecture 21035", "Solomon R. Guggenheim Museum", "Guggenheim Museum", "Guggenheim", "21035 Guggenheim"],
+      "brand_ids": [89162],
       "price_to": 400,
       "currency": "PLN",
       "enabled": true
@@ -678,6 +706,7 @@
       "base_query": "21036",
       "languages": [],
       "manual_keywords": ["21036", "Lego 21036", "21036 Lego", "Architecture 21036", "Łuk Triumfalny", "Arc de Triomphe", "21036 Arc de Triomphe"],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -700,6 +729,7 @@
       "base_query": "21037",
       "languages": [],
       "manual_keywords": ["21037", "Lego 21037", "21037 Lego", "Architecture 21037", "LEGO House", "21037 LEGO House"],
+      "brand_ids": [89162],
       "price_to": 400,
       "currency": "PLN",
       "enabled": true
@@ -722,6 +752,7 @@
       "base_query": "21039",
       "languages": [],
       "manual_keywords": ["21039", "Lego 21039", "21039 Lego", "Architecture 21039", "Szanghaj", "Shanghai", "21039 Shanghai"],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -744,6 +775,7 @@
       "base_query": "21041",
       "languages": [],
       "manual_keywords": ["21041", "Lego 21041", "21041 Lego", "Architecture 21041", "Wielki Mur Chiński", "Great Wall of China", "21041 Great Wall"],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -766,7 +798,8 @@
       "base_query": "21042",
       "languages": [],
       "manual_keywords": ["21042", "Lego 21042", "21042 Lego", "Architecture 21042", "Statua Wolności", "Statue of Liberty", "21042 Statue of Liberty"],
-      "price_to": 250,
+      "brand_ids": [89162],
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -788,6 +821,7 @@
       "base_query": "21043",
       "languages": [],
       "manual_keywords": ["21043", "Lego 21043", "21043 Lego", "Architecture 21043", "San Francisco", "21043 San Francisco"],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -811,6 +845,7 @@
       "base_query": "21045",
       "languages": [],
       "manual_keywords": ["21045", "Lego 21045", "21045 Lego", "Architecture 21045", "Trafalgar Square", "21045 Trafalgar Square"],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -833,6 +868,7 @@
       "base_query": "21046",
       "languages": [],
       "manual_keywords": ["21046", "Lego 21046", "21046 Lego", "Architecture 21046", "Empire State Building", "21046 Empire State Building"],
+      "brand_ids": [89162],
       "price_to": 250,
       "currency": "PLN",
       "enabled": true
@@ -855,6 +891,7 @@
       "base_query": "21047",
       "languages": [],
       "manual_keywords": ["21047", "Lego 21047", "21047 Lego", "Architecture 21047", "Las Vegas", "21047 Las Vegas"],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -877,6 +914,7 @@
       "base_query": "21051",
       "languages": [],
       "manual_keywords": ["21051", "Lego 21051", "21051 Lego", "Architecture 21051", "Tokio", "Tokyo", "21051 Tokyo"],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -899,6 +937,7 @@
       "base_query": "21052",
       "languages": [],
       "manual_keywords": ["21052", "Lego 21052", "21052 Lego", "Architecture 21052", "Dubaj", "Dubai", "21052 Dubai"],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -921,6 +960,7 @@
       "base_query": "21054",
       "languages": [],
       "manual_keywords": ["21054", "Lego 21054", "21054 Lego", "Architecture 21054", "Biały Dom", "White House", "The White House", "21054 White House"],
+      "brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -943,6 +983,7 @@
       "base_query": "21055",
       "languages": [],
       "manual_keywords": ["21055", "Lego 21055", "21055 Lego", "Architecture 21055", "Burdż Chalifa", "Burj Khalifa", "21055 Burj Khalifa"],
+      "brand_ids": [89162],
       "price_to": 400,
       "currency": "PLN",
       "enabled": true
@@ -965,6 +1006,7 @@
       "base_query": "21056",
       "languages": [],
       "manual_keywords": ["21056", "Lego 21056", "21056 Lego", "Architecture 21056", "Tadż Mahal", "Taj Mahal", "21056 Taj Mahal"],
+      "brand_ids": [89162],
       "price_to": 400,
       "currency": "PLN",
       "enabled": true
@@ -987,6 +1029,7 @@
       "base_query": "21057",
       "languages": [],
       "manual_keywords": ["21057", "Lego 21057", "21057 Lego", "Architecture 21057", "Singapur", "Singapore", "21057 Singapore"],
+      "brand_ids": [89162],
       "price_to": 150,
       "currency": "PLN",
       "enabled": true
@@ -1009,6 +1052,7 @@
       "base_query": "21058",
       "languages": [],
       "manual_keywords": ["21058", "Lego 21058", "21058 Lego", "Architecture 21058", "Piramida Cheopsa", "Great Pyramid of Giza", "Pyramid of Giza", "21058 Giza"],
+      "brand_ids": [89162],
       "price_to": 300,
       "currency": "PLN",
       "enabled": true
@@ -1031,6 +1075,7 @@
       "base_query": "21060",
       "languages": [],
       "manual_keywords": ["21060", "Lego 21060", "21060 Lego", "Architecture 21060", "Zamek Himeji", "Himeji Castle", "21060 Himeji"],
+      "brand_ids": [89162],
       "price_to": 400,
       "currency": "PLN",
       "enabled": true
@@ -1053,6 +1098,7 @@
       "base_query": "21061",
       "languages": [],
       "manual_keywords": ["21061", "Lego 21061", "21061 Lego", "Architecture 21061", "Katedra Notre-Dame w Paryżu", "Notre-Dame", "Notre-Dame de Paris", "21061 Notre-Dame"],
+      "brand_ids": [89162],
       "price_to": 400,
       "currency": "PLN",
       "enabled": true
@@ -1075,6 +1121,7 @@
       "base_query": "21062",
       "languages": [],
       "manual_keywords": ["21062", "Lego 21062", "21062 Lego", "Architecture 21062", "Fontanna di Trevi", "Trevi Fountain", "21062 Trevi Fountain"],
+      "brand_ids": [89162],
       "price_to": 400,
       "currency": "PLN",
       "enabled": true
@@ -1097,6 +1144,7 @@
       "base_query": "21063",
       "languages": [],
       "manual_keywords": ["21063", "Lego 21063", "21063 Lego", "Architecture 21063", "Zamek Neuschwanstein", "Neuschwanstein Castle", "21063 Neuschwanstein"],
+      "brand_ids": [89162],
       "price_to": 400,
       "currency": "PLN",
       "enabled": true
@@ -1119,6 +1167,7 @@
       "base_query": "21064",
       "languages": [],
       "manual_keywords": ["21064", "Lego 21064", "21064 Lego", "Architecture 21064", "Paryż - miasto miłości", "Paris", "Paris 21064", "21064 Paris"],
+      "brand_ids": [89162],
       "price_to": 400,
       "currency": "PLN",
       "enabled": true
