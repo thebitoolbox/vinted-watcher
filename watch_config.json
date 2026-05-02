@@ -17,6 +17,7 @@
       "base_query": "21000",
       "languages": [],
       "manual_keywords": ["21000", "Lego 21000", "21000 Lego", "Architecture 21000", "Sears Tower", "Willis Tower", "Sears Tower 21000", "Willis Tower 21000"],
+"brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -38,6 +39,7 @@
       "base_query": "21001",
       "languages": [],
       "manual_keywords": ["21001", "Lego 21001", "21001 Lego", "Architecture 21001", "John Hancock Center", "John Hancock Center 21001"],
+"brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
@@ -59,6 +61,7 @@
       "base_query": "21003",
       "languages": [],
       "manual_keywords": ["21003", "Lego 21003", "21003 Lego", "Architecture 21003", "Seattle Space Needle", "Seattle Space Needle 21003", "Space Needle"],
+"brand_ids": [89162],
       "price_to": 200,
       "currency": "PLN",
       "enabled": true
