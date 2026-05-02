@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Set
 import requests
 
 CONFIG_PATH = Path("watch_config.json")
-STATE_PATH = Path("state.json")
+STATE_PATH = Path("seen_items.json")
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
