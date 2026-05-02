@@ -261,8 +261,7 @@ def format_alert(search: Dict[str, Any], new_items: List[Dict[str, Any]]) -> str
         lines.append("")
         lines.append(f"... i jeszcze {len(new_items) - MAX_ALERTS_PER_MESSAGE} kolejnych")
 
-    return "
-".join(lines)
+    return chr(10).join(lines)
 
 
 def send_telegram_message(text: str) -> None:
