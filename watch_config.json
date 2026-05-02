@@ -1,53 +1,514 @@
 {
   "searches": [
     {
-      "id": "lego_21026_brand",
-      "name": "LEGO 21026 Venice - marka",
-      "base_query": "21026",
+      "id": "lego_21000_brand",
+      "name": "LEGO 21000 Sears Tower / Willis Tower - marka",
+      "base_query": "21000",
       "languages": [],
-      "manual_keywords": [
-        "21026",
-        "Lego 21026",
-        "21026 Lego",
-        "Architecture 21026",
-        "Venice",
-        "Venezia",
-        "Wenecja",
-        "Venice 21026",
-        "Venezia 21026",
-        "Wenecja 21026"
-      ],
+      "manual_keywords": ["21000", "Lego 21000", "21000 Lego", "Architecture 21000", "Sears Tower / Willis Tower", "Sears Tower / Willis Tower 21000", "Lego Sears Tower / Willis Tower", "Architecture Sears Tower / Willis Tower"],
       "brand_ids": [89162],
-      "price_to": 300,
+      "price_to": 400,
       "currency": "PLN",
       "enabled": true
     },
     {
-      "id": "lego_21026_wide",
-      "name": "LEGO 21026 Venice - szerokie",
-      "base_query": "21026",
+      "id": "lego_21000_wide",
+      "name": "LEGO 21000 Sears Tower / Willis Tower - szerokie",
+      "base_query": "21000",
       "languages": [],
-      "manual_keywords": [
-        "21026",
-        "Lego 21026",
-        "21026 Lego",
-        "Architecture 21026",
-        "Venice",
-        "Venezia",
-        "Wenecja",
-        "Lego Venice",
-        "Lego Venezia",
-        "Lego Wenecja",
-        "Venice 21026",
-        "Venezia 21026",
-        "Wenecja 21026",
-        "Architecture Venice",
-        "Architecture Venezia",
-        "Architecture Wenecja"
-      ],
-      "price_to": 300,
+      "manual_keywords": ["21000", "Lego 21000", "21000 Lego", "Architecture 21000", "Sears Tower / Willis Tower", "Sears Tower / Willis Tower 21000", "Lego Sears Tower / Willis Tower", "Architecture Sears Tower / Willis Tower"],
+      "price_to": 400,
       "currency": "PLN",
       "enabled": true
-    }
-  ]
-}
+    },
+
+    {
+      "id": "lego_21001_brand",
+      "name": "LEGO 21001 John Hancock Center - marka",
+      "base_query": "21001",
+      "languages": [],
+      "manual_keywords": ["21001", "Lego 21001", "21001 Lego", "Architecture 21001", "John Hancock Center", "John Hancock Center 21001", "Lego John Hancock Center", "Architecture John Hancock Center"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21001_wide",
+      "name": "LEGO 21001 John Hancock Center - szerokie",
+      "base_query": "21001",
+      "languages": [],
+      "manual_keywords": ["21001", "Lego 21001", "21001 Lego", "Architecture 21001", "John Hancock Center", "John Hancock Center 21001", "Lego John Hancock Center", "Architecture John Hancock Center"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21002_brand",
+      "name": "LEGO 21002 Empire State Building - marka",
+      "base_query": "21002",
+      "languages": [],
+      "manual_keywords": ["21002", "Lego 21002", "21002 Lego", "Architecture 21002", "Empire State Building", "Empire State Building 21002", "Lego Empire State Building", "Architecture Empire State Building"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21002_wide",
+      "name": "LEGO 21002 Empire State Building - szerokie",
+      "base_query": "21002",
+      "languages": [],
+      "manual_keywords": ["21002", "Lego 21002", "21002 Lego", "Architecture 21002", "Empire State Building", "Empire State Building 21002", "Lego Empire State Building", "Architecture Empire State Building"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21003_brand",
+      "name": "LEGO 21003 Seattle Space Needle - marka",
+      "base_query": "21003",
+      "languages": [],
+      "manual_keywords": ["21003", "Lego 21003", "21003 Lego", "Architecture 21003", "Seattle Space Needle", "Seattle Space Needle 21003", "Lego Seattle Space Needle", "Architecture Seattle Space Needle"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21003_wide",
+      "name": "LEGO 21003 Seattle Space Needle - szerokie",
+      "base_query": "21003",
+      "languages": [],
+      "manual_keywords": ["21003", "Lego 21003", "21003 Lego", "Architecture 21003", "Seattle Space Needle", "Seattle Space Needle 21003", "Lego Seattle Space Needle", "Architecture Seattle Space Needle"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21004_brand",
+      "name": "LEGO 21004 Solomon R. Guggenheim Museum - marka",
+      "base_query": "21004",
+      "languages": [],
+      "manual_keywords": ["21004", "Lego 21004", "21004 Lego", "Architecture 21004", "Solomon R. Guggenheim Museum", "Solomon R. Guggenheim Museum 21004", "Lego Solomon R. Guggenheim Museum", "Architecture Solomon R. Guggenheim Museum"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21004_wide",
+      "name": "LEGO 21004 Solomon R. Guggenheim Museum - szerokie",
+      "base_query": "21004",
+      "languages": [],
+      "manual_keywords": ["21004", "Lego 21004", "21004 Lego", "Architecture 21004", "Solomon R. Guggenheim Museum", "Solomon R. Guggenheim Museum 21004", "Lego Solomon R. Guggenheim Museum", "Architecture Solomon R. Guggenheim Museum"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21005_brand",
+      "name": "LEGO 21005 Fallingwater - marka",
+      "base_query": "21005",
+      "languages": [],
+      "manual_keywords": ["21005", "Lego 21005", "21005 Lego", "Architecture 21005", "Fallingwater", "Fallingwater 21005", "Lego Fallingwater", "Architecture Fallingwater"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21005_wide",
+      "name": "LEGO 21005 Fallingwater - szerokie",
+      "base_query": "21005",
+      "languages": [],
+      "manual_keywords": ["21005", "Lego 21005", "21005 Lego", "Architecture 21005", "Fallingwater", "Fallingwater 21005", "Lego Fallingwater", "Architecture Fallingwater"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21006_brand",
+      "name": "LEGO 21006 The White House - marka",
+      "base_query": "21006",
+      "languages": [],
+      "manual_keywords": ["21006", "Lego 21006", "21006 Lego", "Architecture 21006", "The White House", "The White House 21006", "Lego The White House", "Architecture The White House"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21006_wide",
+      "name": "LEGO 21006 The White House - szerokie",
+      "base_query": "21006",
+      "languages": [],
+      "manual_keywords": ["21006", "Lego 21006", "21006 Lego", "Architecture 21006", "The White House", "The White House 21006", "Lego The White House", "Architecture The White House"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21007_brand",
+      "name": "LEGO 21007 Rockefeller Center - marka",
+      "base_query": "21007",
+      "languages": [],
+      "manual_keywords": ["21007", "Lego 21007", "21007 Lego", "Architecture 21007", "Rockefeller Center", "Rockefeller Center 21007", "Lego Rockefeller Center", "Architecture Rockefeller Center"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21007_wide",
+      "name": "LEGO 21007 Rockefeller Center - szerokie",
+      "base_query": "21007",
+      "languages": [],
+      "manual_keywords": ["21007", "Lego 21007", "21007 Lego", "Architecture 21007", "Rockefeller Center", "Rockefeller Center 21007", "Lego Rockefeller Center", "Architecture Rockefeller Center"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21008_brand",
+      "name": "LEGO 21008 Burj Khalifa - marka",
+      "base_query": "21008",
+      "languages": [],
+      "manual_keywords": ["21008", "Lego 21008", "21008 Lego", "Architecture 21008", "Burj Khalifa", "Burj Khalifa 21008", "Lego Burj Khalifa", "Architecture Burj Khalifa"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21008_wide",
+      "name": "LEGO 21008 Burj Khalifa - szerokie",
+      "base_query": "21008",
+      "languages": [],
+      "manual_keywords": ["21008", "Lego 21008", "21008 Lego", "Architecture 21008", "Burj Khalifa", "Burj Khalifa 21008", "Lego Burj Khalifa", "Architecture Burj Khalifa"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21009_brand",
+      "name": "LEGO 21009 Farnsworth House - marka",
+      "base_query": "21009",
+      "languages": [],
+      "manual_keywords": ["21009", "Lego 21009", "21009 Lego", "Architecture 21009", "Farnsworth House", "Farnsworth House 21009", "Lego Farnsworth House", "Architecture Farnsworth House"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21009_wide",
+      "name": "LEGO 21009 Farnsworth House - szerokie",
+      "base_query": "21009",
+      "languages": [],
+      "manual_keywords": ["21009", "Lego 21009", "21009 Lego", "Architecture 21009", "Farnsworth House", "Farnsworth House 21009", "Lego Farnsworth House", "Architecture Farnsworth House"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21010_brand",
+      "name": "LEGO 21010 Robie House - marka",
+      "base_query": "21010",
+      "languages": [],
+      "manual_keywords": ["21010", "Lego 21010", "21010 Lego", "Architecture 21010", "Robie House", "Robie House 21010", "Lego Robie House", "Architecture Robie House"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21010_wide",
+      "name": "LEGO 21010 Robie House - szerokie",
+      "base_query": "21010",
+      "languages": [],
+      "manual_keywords": ["21010", "Lego 21010", "21010 Lego", "Architecture 21010", "Robie House", "Robie House 21010", "Lego Robie House", "Architecture Robie House"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21011_brand",
+      "name": "LEGO 21011 Brama Brandenburska - marka",
+      "base_query": "21011",
+      "languages": [],
+      "manual_keywords": ["21011", "Lego 21011", "21011 Lego", "Architecture 21011", "Brama Brandenburska", "Brama Brandenburska 21011", "Lego Brama Brandenburska", "Architecture Brama Brandenburska"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21011_wide",
+      "name": "LEGO 21011 Brama Brandenburska - szerokie",
+      "base_query": "21011",
+      "languages": [],
+      "manual_keywords": ["21011", "Lego 21011", "21011 Lego", "Architecture 21011", "Brama Brandenburska", "Brama Brandenburska 21011", "Lego Brama Brandenburska", "Architecture Brama Brandenburska"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21012_brand",
+      "name": "LEGO 21012 Sydney Opera House - marka",
+      "base_query": "21012",
+      "languages": [],
+      "manual_keywords": ["21012", "Lego 21012", "21012 Lego", "Architecture 21012", "Sydney Opera House", "Sydney Opera House 21012", "Lego Sydney Opera House", "Architecture Sydney Opera House"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21012_wide",
+      "name": "LEGO 21012 Sydney Opera House - szerokie",
+      "base_query": "21012",
+      "languages": [],
+      "manual_keywords": ["21012", "Lego 21012", "21012 Lego", "Architecture 21012", "Sydney Opera House", "Sydney Opera House 21012", "Lego Sydney Opera House", "Architecture Sydney Opera House"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21013_brand",
+      "name": "LEGO 21013 Big Ben - marka",
+      "base_query": "21013",
+      "languages": [],
+      "manual_keywords": ["21013", "Lego 21013", "21013 Lego", "Architecture 21013", "Big Ben", "Big Ben 21013", "Lego Big Ben", "Architecture Big Ben"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21013_wide",
+      "name": "LEGO 21013 Big Ben - szerokie",
+      "base_query": "21013",
+      "languages": [],
+      "manual_keywords": ["21013", "Lego 21013", "21013 Lego", "Architecture 21013", "Big Ben", "Big Ben 21013", "Lego Big Ben", "Architecture Big Ben"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21014_brand",
+      "name": "LEGO 21014 Villa Savoye - marka",
+      "base_query": "21014",
+      "languages": [],
+      "manual_keywords": ["21014", "Lego 21014", "21014 Lego", "Architecture 21014", "Villa Savoye", "Villa Savoye 21014", "Lego Villa Savoye", "Architecture Villa Savoye"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21014_wide",
+      "name": "LEGO 21014 Villa Savoye - szerokie",
+      "base_query": "21014",
+      "languages": [],
+      "manual_keywords": ["21014", "Lego 21014", "21014 Lego", "Architecture 21014", "Villa Savoye", "Villa Savoye 21014", "Lego Villa Savoye", "Architecture Villa Savoye"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21015_brand",
+      "name": "LEGO 21015 Krzywa Wieża w Pizie - marka",
+      "base_query": "21015",
+      "languages": [],
+      "manual_keywords": ["21015", "Lego 21015", "21015 Lego", "Architecture 21015", "Krzywa Wieża w Pizie", "Krzywa Wieża w Pizie 21015", "Lego Krzywa Wieża w Pizie", "Architecture Krzywa Wieża w Pizie"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21015_wide",
+      "name": "LEGO 21015 Krzywa Wieża w Pizie - szerokie",
+      "base_query": "21015",
+      "languages": [],
+      "manual_keywords": ["21015", "Lego 21015", "21015 Lego", "Architecture 21015", "Krzywa Wieża w Pizie", "Krzywa Wieża w Pizie 21015", "Lego Krzywa Wieża w Pizie", "Architecture Krzywa Wieża w Pizie"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21016_brand",
+      "name": "LEGO 21016 Sungnyemun - marka",
+      "base_query": "21016",
+      "languages": [],
+      "manual_keywords": ["21016", "Lego 21016", "21016 Lego", "Architecture 21016", "Sungnyemun", "Sungnyemun 21016", "Lego Sungnyemun", "Architecture Sungnyemun"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21016_wide",
+      "name": "LEGO 21016 Sungnyemun - szerokie",
+      "base_query": "21016",
+      "languages": [],
+      "manual_keywords": ["21016", "Lego 21016", "21016 Lego", "Architecture 21016", "Sungnyemun", "Sungnyemun 21016", "Lego Sungnyemun", "Architecture Sungnyemun"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21017_brand",
+      "name": "LEGO 21017 Imperial Hotel - marka",
+      "base_query": "21017",
+      "languages": [],
+      "manual_keywords": ["21017", "Lego 21017", "21017 Lego", "Architecture 21017", "Imperial Hotel", "Imperial Hotel 21017", "Lego Imperial Hotel", "Architecture Imperial Hotel"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21017_wide",
+      "name": "LEGO 21017 Imperial Hotel - szerokie",
+      "base_query": "21017",
+      "languages": [],
+      "manual_keywords": ["21017", "Lego 21017", "21017 Lego", "Architecture 21017", "Imperial Hotel", "Imperial Hotel 21017", "Lego Imperial Hotel", "Architecture Imperial Hotel"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21018_brand",
+      "name": "LEGO 21018 Kwatera Główna ONZ - marka",
+      "base_query": "21018",
+      "languages": [],
+      "manual_keywords": ["21018", "Lego 21018", "21018 Lego", "Architecture 21018", "Kwatera Główna ONZ", "Kwatera Główna ONZ 21018", "Lego Kwatera Główna ONZ", "Architecture Kwatera Główna ONZ"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21018_wide",
+      "name": "LEGO 21018 Kwatera Główna ONZ - szerokie",
+      "base_query": "21018",
+      "languages": [],
+      "manual_keywords": ["21018", "Lego 21018", "21018 Lego", "Architecture 21018", "Kwatera Główna ONZ", "Kwatera Główna ONZ 21018", "Lego Kwatera Główna ONZ", "Architecture Kwatera Główna ONZ"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21019_brand",
+      "name": "LEGO 21019 Wieża Eiffla - marka",
+      "base_query": "21019",
+      "languages": [],
+      "manual_keywords": ["21019", "Lego 21019", "21019 Lego", "Architecture 21019", "Wieża Eiffla", "Wieża Eiffla 21019", "Lego Wieża Eiffla", "Architecture Wieża Eiffla"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21019_wide",
+      "name": "LEGO 21019 Wieża Eiffla - szerokie",
+      "base_query": "21019",
+      "languages": [],
+      "manual_keywords": ["21019", "Lego 21019", "21019 Lego", "Architecture 21019", "Wieża Eiffla", "Wieża Eiffla 21019", "Lego Wieża Eiffla", "Architecture Wieża Eiffla"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21020_brand",
+      "name": "LEGO 21020 Fontanna di Trevi - marka",
+      "base_query": "21020",
+      "languages": [],
+      "manual_keywords": ["21020", "Lego 21020", "21020 Lego", "Architecture 21020", "Fontanna di Trevi", "Fontanna di Trevi 21020", "Lego Fontanna di Trevi", "Architecture Fontanna di Trevi"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21020_wide",
+      "name": "LEGO 21020 Fontanna di Trevi - szerokie",
+      "base_query": "21020",
+      "languages": [],
+      "manual_keywords": ["21020", "Lego 21020", "21020 Lego", "Architecture 21020", "Fontanna di Trevi", "Fontanna di Trevi 21020", "Lego Fontanna di Trevi", "Architecture Fontanna di Trevi"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21021_brand",
+      "name": "LEGO 21021 Marina Bay Sands - marka",
+      "base_query": "21021",
+      "languages": [],
+      "manual_keywords": ["21021", "Lego 21021", "21021 Lego", "Architecture 21021", "Marina Bay Sands", "Marina Bay Sands 21021", "Lego Marina Bay Sands", "Architecture Marina Bay Sands"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21021_wide",
+      "name": "LEGO 21021 Marina Bay Sands - szerokie",
+      "base_query": "21021",
+      "languages": [],
+      "manual_keywords": ["21021", "Lego 21021", "21021 Lego", "Architecture 21021", "Marina Bay Sands", "Marina Bay Sands 21021", "Lego Marina Bay Sands", "Architecture Marina Bay Sands"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21022_brand",
+      "name": "LEGO 21022 Lincoln Memorial - marka",
+      "base_query": "21022",
+      "languages": [],
+      "manual_keywords": ["21022", "Lego 21022", "21022 Lego", "Architecture 21022", "Lincoln Memorial", "Lincoln Memorial 21022", "Lego Lincoln Memorial", "Architecture Lincoln Memorial"],
+      "brand_ids": [89162],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+    {
+      "id": "lego_21022_wide",
+      "name": "LEGO 21022 Lincoln Memorial - szerokie",
+      "base_query": "21022",
+      "languages": [],
+      "manual_keywords": ["21022", "Lego 21022", "21022 Lego", "Architecture 21022", "Lincoln Memorial", "Lincoln Memorial 21022", "Lego Lincoln Memorial", "Architecture Lincoln Memorial"],
+      "price_to": 400,
+      "currency": "PLN",
+      "enabled": true
+    },
+
+    {
+      "id": "lego_21023_brand",
+      "name": "LEGO 21023 Flatiron Building - marka",
+      "base_query": "21023",
+      "languages": [],
+      "manual_keywords": ["21023", "Lego 21023", "21023 Lego", "Architecture 21023", "Flatiron Building", "Flatiron Building 21023", "Lego Flatiron Building", "Architecture Fl
