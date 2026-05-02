@@ -249,29 +249,26 @@ def mark_items_seen(
 def format_alert(search: Dict[str, Any], new_items: List[Dict[str, Any]]) -> str:
     search_name = html.escape(str(search.get("name") or search.get("id") or "Vinted search"))
 
-    lines = [
-        f"🔔 <b>{search_name}</b>",
-        f"Nowe oferty: <b>{len(new_items)}</b>",
-        "",
-    ]
+    parts: List[str] = []
+    parts.append("🔔 <b>" + search_name + "</b>")
+    parts.append("Nowe oferty: <b>" + str(len(new_items)) + "</b>")
+    parts.append("")
 
     for item in new_items[:MAX_ALERTS_PER_MESSAGE]:
         title = html.escape(get_item_title(item))
         price = html.escape(get_item_price(item))
         url = html.escape(get_item_url(item))
 
-        lines.append(f"• <b>{title}</b> — {price}")
-        lines.append(url)
-        lines.append("")
+        parts.append("• <b>" + title + "</b> — " + price)
+        parts.append(url)
+        parts.append("")
 
-        if len(new_items) > MAX_ALERTS_PER_MESSAGE:
-        lines.append("")
-        lines.append(f"... i jeszcze {len(new_items) - MAX_ALERTS_PER_MESSAGE} kolejnych")
+    if len(new_items) > MAX_ALERTS_PER_MESSAGE:
+        extra_count = len(new_items) - MAX_ALERTS_PER_MESSAGE
+        parts.append("")
+        parts.append("... i jeszcze " + str(extra_count) + " kolejnych")
 
-    return "\
-".join(lines).replace("\\\
-", "
-")
+    return chr(10).join(parts)
 
 
 def send_telegram_message(text: str) -> None:
