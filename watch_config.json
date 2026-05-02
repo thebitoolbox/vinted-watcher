@@ -1,22 +1,51 @@
 {
   "searches": [
     {
-      "id": "1",
-      "name": "Venice",
-      "base_query": "LEGO Venice",
+      "id": "lego_21026_brand",
+      "name": "LEGO 21026 Venice - marka",
+      "base_query": "21026",
       "languages": [],
-      "manual_keywords": [],
-      "price_to": 250,
+      "manual_keywords": [
+        "21026",
+        "Lego 21026",
+        "21026 Lego",
+        "Architecture 21026",
+        "Venice",
+        "Venezia",
+        "Wenecja",
+        "Venice 21026",
+        "Venezia 21026",
+        "Wenecja 21026"
+      ],
+      "brand_ids": [89162],
+      "price_to": 300,
       "currency": "PLN",
       "enabled": true
     },
-{
-      "id": "2",
-      "name": "Berlin",
-      "base_query": "LEGO Berlin",
+    {
+      "id": "lego_21026_wide",
+      "name": "LEGO 21026 Venice - szerokie",
+      "base_query": "21026",
       "languages": [],
-      "manual_keywords": [],
-      "price_to": 250,
+      "manual_keywords": [
+        "21026",
+        "Lego 21026",
+        "21026 Lego",
+        "Architecture 21026",
+        "Venice",
+        "Venezia",
+        "Wenecja",
+        "Lego Venice",
+        "Lego Venezia",
+        "Lego Wenecja",
+        "Venice 21026",
+        "Venezia 21026",
+        "Wenecja 21026",
+        "Architecture Venice",
+        "Architecture Venezia",
+        "Architecture Wenecja"
+      ],
+      "price_to": 300,
       "currency": "PLN",
       "enabled": true
     }
