@@ -21,7 +21,7 @@ VINTED_CATALOG_URL = "https://www.vinted.pl/api/v2/catalog/items"
 
 
 def build_session() -> requests.Session:
-    session = requests.Session(impersonate="chrome124")
+    session = requests.Session(impersonate="chrome")
     session.headers.update(
         {
             "Accept": "application/json, text/plain, */*",
@@ -197,7 +197,6 @@ def search_items(search: Dict[str, Any]) -> List[Dict[str, Any]]:
         for item in items:
             item_id = get_item_id(item)
             if not item_id:
-                print(f"[DEBUG] item without id: {item}")
                 continue
             if item_id in seen_local:
                 continue
