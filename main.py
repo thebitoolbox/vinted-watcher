@@ -5,7 +5,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Set
 
-import requests
+from curl_cffi import requests
 
 CONFIG_PATH = Path("watch_config.json")
 STATE_PATH = Path("seen_items.json")
@@ -16,15 +16,14 @@ TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
 HTTP_TIMEOUT = int(os.getenv("HTTP_TIMEOUT", "30"))
 MAX_ALERTS_PER_MESSAGE = int(os.getenv("MAX_ALERTS", "10"))
 
+VINTED_BASE_URL = "https://www.vinted.pl"
 VINTED_CATALOG_URL = "https://www.vinted.pl/api/v2/catalog/items"
-USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
 
 
 def build_session() -> requests.Session:
-    session = requests.Session()
+    session = requests.Session(impersonate="chrome124")
     session.headers.update(
         {
-            "User-Agent": USER_AGENT,
             "Accept": "application/json, text/plain, */*",
             "Referer": "https://www.vinted.pl/",
         }
@@ -33,6 +32,11 @@ def build_session() -> requests.Session:
 
 
 SESSION = build_session()
+
+
+def warmup_session() -> None:
+    response = SESSION.get(VINTED_BASE_URL, timeout=HTTP_TIMEOUT)
+    response.raise_for_status()
 
 
 def load_json(path: Path, default: Any) -> Any:
@@ -62,9 +66,9 @@ def load_state() -> Dict[str, Any]:
     return load_json(
         STATE_PATH,
         {
+            "updated_at": 0,
             "seen_ids": [],
             "seen_by_search": {},
-            "last_run_ts": None,
         },
     )
 
@@ -185,18 +189,22 @@ def search_items(search: Dict[str, Any]) -> List[Dict[str, Any]]:
     for keyword in deduped_keywords:
         try:
             items = fetch_items_for_keyword(search, keyword)
+            print(f"[DEBUG] search={search.get('id')} keyword={keyword!r} items={len(items)}")
         except Exception as exc:
             print(f"[WARN] search={search.get('id')} keyword={keyword!r} failed: {exc}")
             continue
 
         for item in items:
             item_id = get_item_id(item)
-            if not item_id or item_id in seen_local:
+            if not item_id:
+                print(f"[DEBUG] item without id: {item}")
+                continue
+            if item_id in seen_local:
                 continue
             seen_local.add(item_id)
             results.append(item)
 
-        time.sleep(0.4)
+        time.sleep(0.8)
 
     return results
 
@@ -261,7 +269,8 @@ def format_alert(search: Dict[str, Any], new_items: List[Dict[str, Any]]) -> str
         lines.append("")
         lines.append(f"... i jeszcze {len(new_items) - MAX_ALERTS_PER_MESSAGE} kolejnych")
 
-    return chr(10).join(lines)
+    return "
+".join(lines)
 
 
 def send_telegram_message(text: str) -> None:
@@ -282,6 +291,8 @@ def send_telegram_message(text: str) -> None:
 
 
 def main() -> None:
+    warmup_session()
+
     searches = load_config()
     state = load_state()
 
@@ -317,7 +328,7 @@ def main() -> None:
 
     state["seen_ids"] = sorted(seen_global)
     state["seen_by_search"] = {k: sorted(v) for k, v in seen_by_search.items()}
-    state["last_run_ts"] = int(time.time())
+    state["updated_at"] = int(time.time())
     save_state(state)
 
     print(f"[INFO] Done. Alerts sent: {all_alerts_sent}")
