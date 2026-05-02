@@ -1,318 +1,327 @@
 import html
 import json
 import os
-import re
 import time
 from pathlib import Path
-from typing import Dict, List, Set, Tuple
-from urllib.parse import urlencode
+from typing import Any, Dict, List, Set
 
 import requests
-from bs4 import BeautifulSoup
-from deep_translator import GoogleTranslator
 
-STATE_FILE = Path("seen_items.json")
-CONFIG_FILE = Path("watch_config.json")
+CONFIG_PATH = Path("watch_config.json")
+STATE_PATH = Path("state.json")
 
-BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
-CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
-USER_AGENT = os.getenv(
-    "USER_AGENT",
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0 Safari/537.36",
-)
-TIMEOUT = int(os.getenv("HTTP_TIMEOUT", "30"))
-MAX_ALERTS_PER_MESSAGE = int(os.getenv("MAX_ALERTS_PER_MESSAGE", "10"))
-TRANSLATION_ENABLED = os.getenv("TRANSLATION_ENABLED", "true").lower() == "true"
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
+
+HTTP_TIMEOUT = int(os.getenv("HTTP_TIMEOUT", "30"))
+MAX_ALERTS_PER_MESSAGE = int(os.getenv("MAX_ALERTS", "10"))
+
+VINTED_CATALOG_URL = "https://www.vinted.pl/api/v2/catalog/items"
+USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
 
 
-def load_config() -> List[Dict]:
-    if not CONFIG_FILE.exists():
-        raise FileNotFoundError("Brak pliku watch_config.json")
-
-    with CONFIG_FILE.open("r", encoding="utf-8") as f:
-        data = json.load(f)
-
-    searches = data.get("searches", [])
-    active = [s for s in searches if s.get("enabled", True)]
-
-    if not active:
-        raise ValueError("Brak aktywnych wyszukiwań w watch_config.json")
-
-    for search in active:
-        if "id" not in search:
-            raise ValueError("Każde wyszukiwanie musi mieć pole 'id'")
-
-    return active
+def build_session() -> requests.Session:
+    session = requests.Session()
+    session.headers.update(
+        {
+            "User-Agent": USER_AGENT,
+            "Accept": "application/json, text/plain, */*",
+            "Referer": "https://www.vinted.pl/",
+        }
+    )
+    return session
 
 
-def load_state() -> Dict:
-    if not STATE_FILE.exists():
-        return {
-            "updated_at": 0,
+SESSION = build_session()
+
+
+def load_json(path: Path, default: Any) -> Any:
+    if not path.exists():
+        return default
+
+    with path.open("r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def save_json(path: Path, data: Any) -> None:
+    with path.open("w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def load_config() -> List[Dict[str, Any]]:
+    payload = load_json(CONFIG_PATH, {"searches": []})
+    searches = payload.get("searches", [])
+
+    if not isinstance(searches, list):
+        raise ValueError("watch_config.json ma niepoprawny format: 'searches' musi być listą")
+
+    return searches
+
+
+def load_state() -> Dict[str, Any]:
+    return load_json(
+        STATE_PATH,
+        {
+            "seen_ids": [],
             "seen_by_search": {},
-            "alerted_items": []
-        }
-
-    try:
-        with STATE_FILE.open("r", encoding="utf-8") as f:
-            data = json.load(f)
-
-        return {
-            "updated_at": data.get("updated_at", 0),
-            "seen_by_search": data.get("seen_by_search", {}),
-            "alerted_items": data.get("alerted_items", [])
-        }
-    except Exception:
-        return {
-            "updated_at": 0,
-            "seen_by_search": {},
-            "alerted_items": []
-        }
+            "last_run_ts": None,
+        },
+    )
 
 
-def save_state(seen_by_search: Dict[str, Set[str]], alerted_items: Set[str]) -> None:
-    payload = {
-        "updated_at": int(time.time()),
-        "seen_by_search": {k: sorted(v) for k, v in seen_by_search.items()},
-        "alerted_items": sorted(alerted_items)
+def save_state(state: Dict[str, Any]) -> None:
+    state["seen_ids"] = sorted(list(set(state.get("seen_ids", []))))
+    normalized_seen_by_search = {}
+
+    for key, values in state.get("seen_by_search", {}).items():
+        normalized_seen_by_search[key] = sorted(list(set(values)))
+
+    state["seen_by_search"] = normalized_seen_by_search
+    save_json(STATE_PATH, state)
+
+
+def build_params(search: Dict[str, Any], keyword: str) -> Dict[str, Any]:
+    params: Dict[str, Any] = {
+        "search_text": keyword,
+        "per_page": 20,
+        "page": 1,
+        "order": "newest_first",
     }
 
-    with STATE_FILE.open("w", encoding="utf-8") as f:
-        json.dump(payload, f, ensure_ascii=False, indent=2)
+    if search.get("price_to") is not None:
+        params["price_to"] = search["price_to"]
+
+    if search.get("currency"):
+        params["currency"] = search["currency"]
+
+    brand_ids = search.get("brand_ids") or []
+    if brand_ids:
+        params["brand_ids[]"] = brand_ids
+
+    return params
 
 
-def fetch_vinted_page(url: str) -> str:
-    headers = {
-        "User-Agent": USER_AGENT,
-        "Accept-Language": "pl-PL,pl;q=0.9,en;q=0.8",
-    }
-    response = requests.get(url, headers=headers, timeout=TIMEOUT)
+def extract_items(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+    items = payload.get("items", [])
+    if isinstance(items, list):
+        return items
+    return []
+
+
+def get_item_id(item: Dict[str, Any]) -> str:
+    item_id = item.get("id")
+    return str(item_id) if item_id is not None else ""
+
+
+def get_item_title(item: Dict[str, Any]) -> str:
+    return str(item.get("title") or item.get("name") or "Bez tytułu")
+
+
+def get_item_url(item: Dict[str, Any]) -> str:
+    raw = str(item.get("url") or item.get("path") or "")
+
+    if raw.startswith("http://") or raw.startswith("https://"):
+        return raw
+
+    if raw.startswith("/"):
+        return f"https://www.vinted.pl{raw}"
+
+    return raw
+
+
+def get_item_price(item: Dict[str, Any]) -> str:
+    price = item.get("price")
+
+    if isinstance(price, dict):
+        amount = price.get("amount") or price.get("value")
+        currency = price.get("currency_code") or price.get("currency")
+        if amount is not None and currency:
+            return f"{amount} {currency}"
+        if amount is not None:
+            return str(amount)
+
+    if price is not None:
+        return str(price)
+
+    total_price = item.get("total_item_price") or item.get("price_numeric")
+    if total_price is not None:
+        return str(total_price)
+
+    return "brak ceny"
+
+
+def fetch_items_for_keyword(search: Dict[str, Any], keyword: str) -> List[Dict[str, Any]]:
+    params = build_params(search, keyword)
+    response = SESSION.get(VINTED_CATALOG_URL, params=params, timeout=HTTP_TIMEOUT)
     response.raise_for_status()
-    return response.text
+    payload = response.json()
+    return extract_items(payload)
 
 
-def absolute_url(href: str) -> str:
-    if href.startswith("http://") or href.startswith("https://"):
-        return href
-    if href.startswith("/"):
-        return f"https://www.vinted.pl{href}"
-    return f"https://www.vinted.pl/{href.lstrip('/')}"
+def search_items(search: Dict[str, Any]) -> List[Dict[str, Any]]:
+    results: List[Dict[str, Any]] = []
+    seen_local: Set[str] = set()
 
+    keywords: List[str] = []
+    base_query = str(search.get("base_query") or "").strip()
+    if base_query:
+        keywords.append(base_query)
 
-def extract_items(html_text: str) -> List[Dict[str, str]]:
-    soup = BeautifulSoup(html_text, "lxml")
-    items: List[Dict[str, str]] = []
-    local_seen_ids = set()
+    for keyword in search.get("manual_keywords", []) or []:
+        keyword = str(keyword).strip()
+        if keyword:
+            keywords.append(keyword)
 
-    for a in soup.find_all("a", href=True):
-        href = a.get("href", "").strip()
+    deduped_keywords: List[str] = []
+    seen_keywords: Set[str] = set()
 
-        if "/items/" not in href:
+    for keyword in keywords:
+        key = keyword.casefold()
+        if key in seen_keywords:
+            continue
+        seen_keywords.add(key)
+        deduped_keywords.append(keyword)
+
+    for keyword in deduped_keywords:
+        try:
+            items = fetch_items_for_keyword(search, keyword)
+        except Exception as exc:
+            print(f"[WARN] search={search.get('id')} keyword={keyword!r} failed: {exc}")
             continue
 
-        match = re.search(r"/items/(d+)", href)
-        if not match:
+        for item in items:
+            item_id = get_item_id(item)
+            if not item_id or item_id in seen_local:
+                continue
+            seen_local.add(item_id)
+            results.append(item)
+
+        time.sleep(0.4)
+
+    return results
+
+
+def filter_new_items(
+    search_id: str,
+    items: List[Dict[str, Any]],
+    seen_global: Set[str],
+    seen_by_search: Dict[str, Set[str]],
+) -> List[Dict[str, Any]]:
+    new_items: List[Dict[str, Any]] = []
+    seen_for_this_search = seen_by_search.setdefault(search_id, set())
+
+    for item in items:
+        item_id = get_item_id(item)
+        if not item_id:
             continue
-
-        item_id = match.group(1)
-        if item_id in local_seen_ids:
+        if item_id in seen_global:
             continue
+        if item_id in seen_for_this_search:
+            continue
+        new_items.append(item)
 
-        local_seen_ids.add(item_id)
-        url = absolute_url(href)
-
-        title = (
-            a.get("title")
-            or a.get_text(" ", strip=True)
-            or "Nowa oferta"
-        ).strip()
-
-        title = re.sub(r"s+", " ", title)
-
-        items.append({
-            "id": item_id,
-            "title": title[:180],
-            "url": url,
-        })
-
-    return items
+    return new_items
 
 
-def send_telegram_message(message: str) -> None:
-    if not BOT_TOKEN or not CHAT_ID:
-        raise ValueError("Brak TELEGRAM_BOT_TOKEN lub TELEGRAM_CHAT_ID")
+def mark_items_seen(
+    search_id: str,
+    items: List[Dict[str, Any]],
+    seen_global: Set[str],
+    seen_by_search: Dict[str, Set[str]],
+) -> None:
+    seen_for_this_search = seen_by_search.setdefault(search_id, set())
 
-    api_url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    for item in items:
+        item_id = get_item_id(item)
+        if not item_id:
+            continue
+        seen_global.add(item_id)
+        seen_for_this_search.add(item_id)
+
+
+def format_alert(search: Dict[str, Any], new_items: List[Dict[str, Any]]) -> str:
+    search_name = html.escape(str(search.get("name") or search.get("id") or "Vinted search"))
+
+    lines = [
+        f"🔔 <b>{search_name}</b>",
+        f"Nowe oferty: <b>{len(new_items)}</b>",
+        "",
+    ]
+
+    for item in new_items[:MAX_ALERTS_PER_MESSAGE]:
+        title = html.escape(get_item_title(item))
+        price = html.escape(get_item_price(item))
+        url = html.escape(get_item_url(item))
+
+        lines.append(f"• <b>{title}</b> — {price}")
+        lines.append(url)
+        lines.append("")
+
+    if len(new_items) > MAX_ALERTS_PER_MESSAGE:
+        lines.append("")
+        lines.append(f"... i jeszcze {len(new_items) - MAX_ALERTS_PER_MESSAGE} kolejnych")
+
+    return "
+".join(lines)
+
+
+def send_telegram_message(text: str) -> None:
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        print("[WARN] Brak TELEGRAM_BOT_TOKEN lub TELEGRAM_CHAT_ID, pomijam wysyłkę.")
+        return
+
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     payload = {
-        "chat_id": CHAT_ID,
-        "text": message,
+        "chat_id": TELEGRAM_CHAT_ID,
+        "text": text,
         "parse_mode": "HTML",
         "disable_web_page_preview": True,
     }
 
-    response = requests.post(api_url, json=payload, timeout=TIMEOUT)
+    response = SESSION.post(url, json=payload, timeout=HTTP_TIMEOUT)
     response.raise_for_status()
-
-
-def unique_preserve_order(values: List[str]) -> List[str]:
-    seen = set()
-    result = []
-
-    for value in values:
-        cleaned = re.sub(r"s+", " ", str(value).strip())
-        if not cleaned:
-            continue
-
-        key = cleaned.casefold()
-        if key in seen:
-            continue
-
-        seen.add(key)
-        result.append(cleaned)
-
-    return result
-
-
-def translate_query(base_query: str, languages: List[str]) -> List[str]:
-    if not TRANSLATION_ENABLED or not base_query or not languages:
-        return []
-
-    translated_variants = []
-
-    for lang in languages:
-        try:
-            translated = GoogleTranslator(source="auto", target=lang).translate(text=base_query)
-            if translated:
-                translated_variants.append(translated.strip())
-        except Exception as e:
-            print(f"[WARN] Translation failed for '{base_query}' -> {lang}: {e}")
-
-    return translated_variants
-
-
-def expand_keywords(search: Dict) -> List[str]:
-    base_query = search.get("base_query", "").strip()
-    manual_keywords = search.get("manual_keywords", [])
-    languages = search.get("languages", [])
-
-    variants = []
-
-    if base_query:
-        variants.append(base_query)
-
-    variants.extend(translate_query(base_query, languages))
-    variants.extend(manual_keywords)
-
-    return unique_preserve_order(variants)
-
-
-def build_search_url(
-    query: str,
-    price_to: int | None = None,
-    currency: str = "PLN",
-    brand_ids: List[int] | None = None
-) -> str:
-    params: List[Tuple[str, str]] = [
-        ("search_text", query),
-        ("currency", currency),
-    ]
-
-    if price_to is not None:
-        params.append(("price_from", "0"))
-        params.append(("price_to", str(price_to)))
-
-    if brand_ids:
-        for brand_id in brand_ids:
-            params.append(("brand_ids[]", str(brand_id)))
-
-    return f"https://www.vinted.pl/catalog?{urlencode(params)}"
-
-
-def build_message(search_name: str, variant_label: str, new_items: List[Dict[str, str]]) -> str:
-    lines = [
-        f"🛍️ <b>{html.escape(search_name)}</b>",
-        f"Wariant: <b>{html.escape(variant_label)}</b>",
-        f"Nowe oferty: <b>{len(new_items)}</b>"
-    ]
-
-    for item in new_items[:MAX_ALERTS_PER_MESSAGE]:
-        lines.append("")
-        lines.append(f"• {html.escape(item['title'])}")
-        lines.append(item["url"])
-
-    if len(new_items) > MAX_ALERTS_PER_MESSAGE:
-        lines.append("")
-        lines.append(f"… i jeszcze {len(new_items) - MAX_ALERTS_PER_MESSAGE} kolejnych")
-
-    return "
-".join(lines)
 
 
 def main() -> None:
     searches = load_config()
     state = load_state()
 
+    seen_global: Set[str] = set(str(x) for x in state.get("seen_ids", []))
     seen_by_search: Dict[str, Set[str]] = {
-        key: set(values) for key, values in state.get("seen_by_search", {}).items()
+        key: set(str(v) for v in values)
+        for key, values in state.get("seen_by_search", {}).items()
     }
-    alerted_items: Set[str] = set(state.get("alerted_items", []))
 
-    total_new_alerts = 0
+    enabled_searches = [s for s in searches if s.get("enabled", True)]
+    print(f"[INFO] Loaded searches: {len(enabled_searches)}")
 
-    for search in searches:
-        search_id = search["id"]
-        search_name = search.get("name", search_id)
-        price_to = search.get("price_to")
-        currency = search.get("currency", "PLN")
-        brand_ids = search.get("brand_ids", [])
+    all_alerts_sent = 0
 
-        keywords = expand_keywords(search)
-        if not keywords:
-            print(f"[WARN] Brak keywords dla {search_name}")
+    for search in enabled_searches:
+        search_id = str(search.get("id") or "").strip()
+        if not search_id:
+            print("[WARN] Pomijam search bez id")
             continue
 
-        for keyword in keywords:
-            variant_key = f"{search_id}::{keyword.casefold()}"
-            search_url = build_search_url(
-                query=keyword,
-                price_to=price_to,
-                currency=currency,
-                brand_ids=brand_ids
-            )
+        print(f"[INFO] Running search: {search_id}")
+        items = search_items(search)
+        new_items = filter_new_items(search_id, items, seen_global, seen_by_search)
 
-            try:
-                html_text = fetch_vinted_page(search_url)
-                items = extract_items(html_text)
-            except Exception as e:
-                print(f"[ERROR] {search_name} / {keyword}: {e}")
-                continue
+        print(f"[INFO] search={search_id} fetched={len(items)} new={len(new_items)}")
 
-            if not items:
-                print(f"[WARN] Brak ofert dla: {search_name} / {keyword}")
-                continue
+        if new_items:
+            alert_text = format_alert(search, new_items)
+            send_telegram_message(alert_text)
+            all_alerts_sent += 1
 
-            current_ids = {item["id"] for item in items}
-            previous_ids = seen_by_search.get(variant_key, set())
+        mark_items_seen(search_id, items, seen_global, seen_by_search)
 
-            if not previous_ids:
-                seen_by_search[variant_key] = current_ids
-                print(f"[INIT] {search_name} / {keyword}: zapisano {len(current_ids)} ofert bez alertu.")
-                continue
+    state["seen_ids"] = sorted(seen_global)
+    state["seen_by_search"] = {k: sorted(v) for k, v in seen_by_search.items()}
+    state["last_run_ts"] = int(time.time())
+    save_state(state)
 
-            unseen_for_this_search = [item for item in items if item["id"] not in previous_ids]
-            globally_new_items = [item for item in unseen_for_this_search if item["id"] not in alerted_items]
-
-            if globally_new_items:
-                send_telegram_message(build_message(search_name, keyword, globally_new_items))
-                for item in globally_new_items:
-                    alerted_items.add(item["id"])
-                total_new_alerts += len(globally_new_items)
-                print(f"[ALERT] {search_name} / {keyword}: {len(globally_new_items)} nowych globalnie.")
-
-            seen_by_search[variant_key] = previous_ids | current_ids
-
-    save_state(seen_by_search, alerted_items)
-    print(f"Gotowe. Łącznie wysłanych nowych alertów: {total_new_alerts}")
+    print(f"[INFO] Done. Alerts sent: {all_alerts_sent}")
 
 
 if __name__ == "__main__":
