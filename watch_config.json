@@ -7,7 +7,7 @@
       "languages": [],
       "manual_keywords": ["21000", "Lego 21000", "21000 Lego", "Architecture 21000", "Sears Tower", "Willis Tower", "Sears Tower 21000", "Willis Tower 21000"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -17,7 +17,7 @@
       "base_query": "21000",
       "languages": [],
       "manual_keywords": ["21000", "Lego 21000", "21000 Lego", "Architecture 21000", "Sears Tower", "Willis Tower", "Sears Tower 21000", "Willis Tower 21000"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -28,7 +28,7 @@
       "languages": [],
       "manual_keywords": ["21001", "Lego 21001", "21001 Lego", "Architecture 21001", "John Hancock Center", "John Hancock Center 21001"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -38,28 +38,7 @@
       "base_query": "21001",
       "languages": [],
       "manual_keywords": ["21001", "Lego 21001", "21001 Lego", "Architecture 21001", "John Hancock Center", "John Hancock Center 21001"],
-      "price_to": 400,
-      "currency": "PLN",
-      "enabled": true
-    },
-    {
-      "id": "lego_21002_brand",
-      "name": "LEGO 21002 Empire State Building - marka",
-      "base_query": "21002",
-      "languages": [],
-      "manual_keywords": ["21002", "Lego 21002", "21002 Lego", "Architecture 21002", "Empire State Building", "Empire State Building 21002"],
-      "brand_ids": [89162],
-      "price_to": 400,
-      "currency": "PLN",
-      "enabled": true
-    },
-    {
-      "id": "lego_21002_wide",
-      "name": "LEGO 21002 Empire State Building - szerokie",
-      "base_query": "21002",
-      "languages": [],
-      "manual_keywords": ["21002", "Lego 21002", "21002 Lego", "Architecture 21002", "Empire State Building", "Empire State Building 21002"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -70,7 +49,7 @@
       "languages": [],
       "manual_keywords": ["21003", "Lego 21003", "21003 Lego", "Architecture 21003", "Seattle Space Needle", "Seattle Space Needle 21003", "Space Needle"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -80,7 +59,7 @@
       "base_query": "21003",
       "languages": [],
       "manual_keywords": ["21003", "Lego 21003", "21003 Lego", "Architecture 21003", "Seattle Space Needle", "Seattle Space Needle 21003", "Space Needle"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -91,7 +70,7 @@
       "languages": [],
       "manual_keywords": ["21004", "Lego 21004", "21004 Lego", "Architecture 21004", "Solomon R. Guggenheim Museum", "Guggenheim Museum", "Guggenheim", "21004 Guggenheim"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -101,7 +80,7 @@
       "base_query": "21004",
       "languages": [],
       "manual_keywords": ["21004", "Lego 21004", "21004 Lego", "Architecture 21004", "Solomon R. Guggenheim Museum", "Guggenheim Museum", "Guggenheim", "21004 Guggenheim"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -112,7 +91,7 @@
       "languages": [],
       "manual_keywords": ["21005", "Lego 21005", "21005 Lego", "Architecture 21005", "Fallingwater", "Fallingwater 21005"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 800,
       "currency": "PLN",
       "enabled": true
     },
@@ -122,7 +101,7 @@
       "base_query": "21005",
       "languages": [],
       "manual_keywords": ["21005", "Lego 21005", "21005 Lego", "Architecture 21005", "Fallingwater", "Fallingwater 21005"],
-      "price_to": 400,
+      "price_to": 800,
       "currency": "PLN",
       "enabled": true
     },
@@ -134,7 +113,7 @@
       "languages": [],
       "manual_keywords": ["21006", "Lego 21006", "21006 Lego", "Architecture 21006", "The White House", "White House", "Biały Dom", "21006 White House"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -144,7 +123,7 @@
       "base_query": "21006",
       "languages": [],
       "manual_keywords": ["21006", "Lego 21006", "21006 Lego", "Architecture 21006", "The White House", "White House", "Biały Dom", "21006 White House"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -156,7 +135,7 @@
       "languages": [],
       "manual_keywords": ["21007", "Lego 21007", "21007 Lego", "Architecture 21007", "Rockefeller Center", "21007 Rockefeller Center"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 800,
       "currency": "PLN",
       "enabled": true
     },
@@ -166,7 +145,7 @@
       "base_query": "21007",
       "languages": [],
       "manual_keywords": ["21007", "Lego 21007", "21007 Lego", "Architecture 21007", "Rockefeller Center", "21007 Rockefeller Center"],
-      "price_to": 400,
+      "price_to": 800,
       "currency": "PLN",
       "enabled": true
     },
