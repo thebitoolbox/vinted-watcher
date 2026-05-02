@@ -264,12 +264,14 @@ def format_alert(search: Dict[str, Any], new_items: List[Dict[str, Any]]) -> str
         lines.append(url)
         lines.append("")
 
-    if len(new_items) > MAX_ALERTS_PER_MESSAGE:
+        if len(new_items) > MAX_ALERTS_PER_MESSAGE:
         lines.append("")
         lines.append(f"... i jeszcze {len(new_items) - MAX_ALERTS_PER_MESSAGE} kolejnych")
 
-    return "
-".join(lines)
+    return "\
+".join(lines).replace("\\\
+", "
+")
 
 
 def send_telegram_message(text: str) -> None:
