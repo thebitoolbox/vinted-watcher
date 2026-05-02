@@ -842,7 +842,7 @@
       "languages": [],
       "manual_keywords": ["21047", "Lego 21047", "21047 Lego", "Architecture 21047", "Las Vegas", "21047 Las Vegas"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -852,7 +852,7 @@
       "base_query": "21047",
       "languages": [],
       "manual_keywords": ["21047", "Lego 21047", "21047 Lego", "Architecture 21047", "Las Vegas", "21047 Las Vegas"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -864,7 +864,7 @@
       "languages": [],
       "manual_keywords": ["21051", "Lego 21051", "21051 Lego", "Architecture 21051", "Tokio", "Tokyo", "21051 Tokyo"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -874,7 +874,7 @@
       "base_query": "21051",
       "languages": [],
       "manual_keywords": ["21051", "Lego 21051", "21051 Lego", "Architecture 21051", "Tokio", "Tokyo", "21051 Tokyo"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -886,7 +886,7 @@
       "languages": [],
       "manual_keywords": ["21052", "Lego 21052", "21052 Lego", "Architecture 21052", "Dubaj", "Dubai", "21052 Dubai"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -896,7 +896,7 @@
       "base_query": "21052",
       "languages": [],
       "manual_keywords": ["21052", "Lego 21052", "21052 Lego", "Architecture 21052", "Dubaj", "Dubai", "21052 Dubai"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -908,7 +908,7 @@
       "languages": [],
       "manual_keywords": ["21054", "Lego 21054", "21054 Lego", "Architecture 21054", "Biały Dom", "White House", "The White House", "21054 White House"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -918,7 +918,7 @@
       "base_query": "21054",
       "languages": [],
       "manual_keywords": ["21054", "Lego 21054", "21054 Lego", "Architecture 21054", "Biały Dom", "White House", "The White House", "21054 White House"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -974,7 +974,7 @@
       "languages": [],
       "manual_keywords": ["21057", "Lego 21057", "21057 Lego", "Architecture 21057", "Singapur", "Singapore", "21057 Singapore"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 150,
       "currency": "PLN",
       "enabled": true
     },
@@ -984,7 +984,7 @@
       "base_query": "21057",
       "languages": [],
       "manual_keywords": ["21057", "Lego 21057", "21057 Lego", "Architecture 21057", "Singapur", "Singapore", "21057 Singapore"],
-      "price_to": 400,
+      "price_to": 150,
       "currency": "PLN",
       "enabled": true
     },
@@ -996,7 +996,7 @@
       "languages": [],
       "manual_keywords": ["21058", "Lego 21058", "21058 Lego", "Architecture 21058", "Piramida Cheopsa", "Great Pyramid of Giza", "Pyramid of Giza", "21058 Giza"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 300,
       "currency": "PLN",
       "enabled": true
     },
@@ -1006,7 +1006,7 @@
       "base_query": "21058",
       "languages": [],
       "manual_keywords": ["21058", "Lego 21058", "21058 Lego", "Architecture 21058", "Piramida Cheopsa", "Great Pyramid of Giza", "Pyramid of Giza", "21058 Giza"],
-      "price_to": 400,
+      "price_to": 300,
       "currency": "PLN",
       "enabled": true
     },
@@ -1119,28 +1119,7 @@
       "price_to": 400,
       "currency": "PLN",
       "enabled": true
-    },
-
-    {
-      "id": "lego_40585_brand",
-      "name": "LEGO 40585 Cuda Świata - marka",
-      "base_query": "40585",
-      "languages": [],
-      "manual_keywords": ["40585", "Lego 40585", "40585 Lego", "Architecture 40585", "Cuda Świata", "World of Wonders", "40585 World of Wonders"],
-      "brand_ids": [89162],
-      "price_to": 400,
-      "currency": "PLN",
-      "enabled": true
-    },
-    {
-      "id": "lego_40585_wide",
-      "name": "LEGO 40585 Cuda Świata - szerokie",
-      "base_query": "40585",
-      "languages": [],
-      "manual_keywords": ["40585", "Lego 40585", "40585 Lego", "Architecture 40585", "Cuda Świata", "World of Wonders", "40585 World of Wonders"],
-      "price_to": 400,
-      "currency": "PLN",
-      "enabled": true
     }
+
   ]
 }
