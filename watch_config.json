@@ -157,7 +157,7 @@
       "languages": [],
       "manual_keywords": ["21008", "Lego 21008", "21008 Lego", "Architecture 21008", "Burj Khalifa", "Burdż Chalifa", "21008 Burj Khalifa"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -167,7 +167,7 @@
       "base_query": "21008",
       "languages": [],
       "manual_keywords": ["21008", "Lego 21008", "21008 Lego", "Architecture 21008", "Burj Khalifa", "Burdż Chalifa", "21008 Burj Khalifa"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -201,7 +201,7 @@
       "languages": [],
       "manual_keywords": ["21010", "Lego 21010", "21010 Lego", "Architecture 21010", "Robie House", "21010 Robie House"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 1000,
       "currency": "PLN",
       "enabled": true
     },
@@ -211,7 +211,7 @@
       "base_query": "21010",
       "languages": [],
       "manual_keywords": ["21010", "Lego 21010", "21010 Lego", "Architecture 21010", "Robie House", "21010 Robie House"],
-      "price_to": 400,
+      "price_to": 1000,
       "currency": "PLN",
       "enabled": true
     },
@@ -223,7 +223,7 @@
       "languages": [],
       "manual_keywords": ["21011", "Lego 21011", "21011 Lego", "Architecture 21011", "Brama Brandenburska", "Brandenburg Gate", "21011 Brandenburg Gate"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -233,7 +233,7 @@
       "base_query": "21011",
       "languages": [],
       "manual_keywords": ["21011", "Lego 21011", "21011 Lego", "Architecture 21011", "Brama Brandenburska", "Brandenburg Gate", "21011 Brandenburg Gate"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -245,7 +245,7 @@
       "languages": [],
       "manual_keywords": ["21012", "Lego 21012", "21012 Lego", "Architecture 21012", "Sydney Opera House", "Opera House", "21012 Sydney Opera House"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -255,29 +255,7 @@
       "base_query": "21012",
       "languages": [],
       "manual_keywords": ["21012", "Lego 21012", "21012 Lego", "Architecture 21012", "Sydney Opera House", "Opera House", "21012 Sydney Opera House"],
-      "price_to": 400,
-      "currency": "PLN",
-      "enabled": true
-    },
-
-    {
-      "id": "lego_21013_brand",
-      "name": "LEGO 21013 Big Ben - marka",
-      "base_query": "21013",
-      "languages": [],
-      "manual_keywords": ["21013", "Lego 21013", "21013 Lego", "Architecture 21013", "Big Ben", "21013 Big Ben"],
-      "brand_ids": [89162],
-      "price_to": 400,
-      "currency": "PLN",
-      "enabled": true
-    },
-    {
-      "id": "lego_21013_wide",
-      "name": "LEGO 21013 Big Ben - szerokie",
-      "base_query": "21013",
-      "languages": [],
-      "manual_keywords": ["21013", "Lego 21013", "21013 Lego", "Architecture 21013", "Big Ben", "21013 Big Ben"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -311,7 +289,7 @@
       "languages": [],
       "manual_keywords": ["21015", "Lego 21015", "21015 Lego", "Architecture 21015", "Krzywa Wieża w Pizie", "Leaning Tower of Pisa", "Torre di Pisa", "Pisa", "21015 Pisa"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -321,7 +299,7 @@
       "base_query": "21015",
       "languages": [],
       "manual_keywords": ["21015", "Lego 21015", "21015 Lego", "Architecture 21015", "Krzywa Wieża w Pizie", "Leaning Tower of Pisa", "Torre di Pisa", "Pisa", "21015 Pisa"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -333,7 +311,7 @@
       "languages": [],
       "manual_keywords": ["21016", "Lego 21016", "21016 Lego", "Architecture 21016", "Sungnyemun", "21016 Sungnyemun"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 500,
       "currency": "PLN",
       "enabled": true
     },
@@ -343,7 +321,7 @@
       "base_query": "21016",
       "languages": [],
       "manual_keywords": ["21016", "Lego 21016", "21016 Lego", "Architecture 21016", "Sungnyemun", "21016 Sungnyemun"],
-      "price_to": 400,
+      "price_to": 500,
       "currency": "PLN",
       "enabled": true
     },
@@ -355,7 +333,7 @@
       "languages": [],
       "manual_keywords": ["21017", "Lego 21017", "21017 Lego", "Architecture 21017", "Imperial Hotel", "21017 Imperial Hotel"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 800,
       "currency": "PLN",
       "enabled": true
     },
@@ -365,7 +343,7 @@
       "base_query": "21017",
       "languages": [],
       "manual_keywords": ["21017", "Lego 21017", "21017 Lego", "Architecture 21017", "Imperial Hotel", "21017 Imperial Hotel"],
-      "price_to": 400,
+      "price_to": 800,
       "currency": "PLN",
       "enabled": true
     },
@@ -377,7 +355,7 @@
       "languages": [],
       "manual_keywords": ["21018", "Lego 21018", "21018 Lego", "Architecture 21018", "Kwatera Główna ONZ", "United Nations Headquarters", "UN Headquarters", "21018 UN Headquarters"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -387,29 +365,7 @@
       "base_query": "21018",
       "languages": [],
       "manual_keywords": ["21018", "Lego 21018", "21018 Lego", "Architecture 21018", "Kwatera Główna ONZ", "United Nations Headquarters", "UN Headquarters", "21018 UN Headquarters"],
-      "price_to": 400,
-      "currency": "PLN",
-      "enabled": true
-    },
-
-    {
-      "id": "lego_21019_brand",
-      "name": "LEGO 21019 Wieża Eiffla - marka",
-      "base_query": "21019",
-      "languages": [],
-      "manual_keywords": ["21019", "Lego 21019", "21019 Lego", "Architecture 21019", "Wieża Eiffla", "Eiffel Tower", "Tour Eiffel", "21019 Eiffel Tower"],
-      "brand_ids": [89162],
-      "price_to": 400,
-      "currency": "PLN",
-      "enabled": true
-    },
-    {
-      "id": "lego_21019_wide",
-      "name": "LEGO 21019 Wieża Eiffla - szerokie",
-      "base_query": "21019",
-      "languages": [],
-      "manual_keywords": ["21019", "Lego 21019", "21019 Lego", "Architecture 21019", "Wieża Eiffla", "Eiffel Tower", "Tour Eiffel", "21019 Eiffel Tower"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -443,7 +399,7 @@
       "languages": [],
       "manual_keywords": ["21021", "Lego 21021", "21021 Lego", "Architecture 21021", "Marina Bay Sands", "21021 Marina Bay Sands"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 1000,
       "currency": "PLN",
       "enabled": true
     },
@@ -453,7 +409,7 @@
       "base_query": "21021",
       "languages": [],
       "manual_keywords": ["21021", "Lego 21021", "21021 Lego", "Architecture 21021", "Marina Bay Sands", "21021 Marina Bay Sands"],
-      "price_to": 400,
+      "price_to": 1000,
       "currency": "PLN",
       "enabled": true
     },
@@ -487,7 +443,7 @@
       "languages": [],
       "manual_keywords": ["21023", "Lego 21023", "21023 Lego", "Architecture 21023", "Flatiron Building", "21023 Flatiron Building"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 100,
       "currency": "PLN",
       "enabled": true
     },
@@ -497,7 +453,7 @@
       "base_query": "21023",
       "languages": [],
       "manual_keywords": ["21023", "Lego 21023", "21023 Lego", "Architecture 21023", "Flatiron Building", "21023 Flatiron Building"],
-      "price_to": 400,
+      "price_to": 100,
       "currency": "PLN",
       "enabled": true
     },
@@ -509,7 +465,7 @@
       "languages": [],
       "manual_keywords": ["21024", "Lego 21024", "21024 Lego", "Architecture 21024", "Luwr", "Louvre", "Le Louvre", "21024 Louvre"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -519,7 +475,7 @@
       "base_query": "21024",
       "languages": [],
       "manual_keywords": ["21024", "Lego 21024", "21024 Lego", "Architecture 21024", "Luwr", "Louvre", "Le Louvre", "21024 Louvre"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -553,7 +509,7 @@
       "languages": [],
       "manual_keywords": ["21027", "Lego 21027", "21027 Lego", "Architecture 21027", "Berlin", "Berlin 21027"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 300,
       "currency": "PLN",
       "enabled": true
     },
@@ -563,32 +519,11 @@
       "base_query": "21027",
       "languages": [],
       "manual_keywords": ["21027", "Lego 21027", "21027 Lego", "Architecture 21027", "Berlin", "Berlin 21027"],
-      "price_to": 400,
+      "price_to": 300,
       "currency": "PLN",
       "enabled": true
     },
 
-    {
-      "id": "lego_21028_brand",
-      "name": "LEGO 21028 Nowy Jork - marka",
-      "base_query": "21028",
-      "languages": [],
-      "manual_keywords": ["21028", "Lego 21028", "21028 Lego", "Architecture 21028", "Nowy Jork", "New York", "NYC", "21028 New York"],
-      "brand_ids": [89162],
-      "price_to": 400,
-      "currency": "PLN",
-      "enabled": true
-    },
-    {
-      "id": "lego_21028_wide",
-      "name": "LEGO 21028 Nowy Jork - szerokie",
-      "base_query": "21028",
-      "languages": [],
-      "manual_keywords": ["21028", "Lego 21028", "21028 Lego", "Architecture 21028", "Nowy Jork", "New York", "NYC", "21028 New York"],
-      "price_to": 400,
-      "currency": "PLN",
-      "enabled": true
-    },
 
     {
       "id": "lego_21029_brand",
@@ -663,7 +598,7 @@
       "languages": [],
       "manual_keywords": ["21032", "Lego 21032", "21032 Lego", "Architecture 21032", "Sydney", "Sydney 21032"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 300,
       "currency": "PLN",
       "enabled": true
     },
@@ -673,7 +608,7 @@
       "base_query": "21032",
       "languages": [],
       "manual_keywords": ["21032", "Lego 21032", "21032 Lego", "Architecture 21032", "Sydney", "Sydney 21032"],
-      "price_to": 400,
+      "price_to": 300,
       "currency": "PLN",
       "enabled": true
     },
@@ -685,7 +620,7 @@
       "languages": [],
       "manual_keywords": ["21033", "Lego 21033", "21033 Lego", "Architecture 21033", "Chicago", "Chicago 21033"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 300,
       "currency": "PLN",
       "enabled": true
     },
@@ -695,32 +630,11 @@
       "base_query": "21033",
       "languages": [],
       "manual_keywords": ["21033", "Lego 21033", "21033 Lego", "Architecture 21033", "Chicago", "Chicago 21033"],
-      "price_to": 400,
+      "price_to": 300,
       "currency": "PLN",
       "enabled": true
     },
 
-    {
-      "id": "lego_21034_brand",
-      "name": "LEGO 21034 Londyn - marka",
-      "base_query": "21034",
-      "languages": [],
-      "manual_keywords": ["21034", "Lego 21034", "21034 Lego", "Architecture 21034", "Londyn", "London", "21034 London"],
-      "brand_ids": [89162],
-      "price_to": 220,
-      "currency": "PLN",
-      "enabled": true
-    },
-    {
-      "id": "lego_21034_wide",
-      "name": "LEGO 21034 Londyn - szerokie",
-      "base_query": "21034",
-      "languages": [],
-      "manual_keywords": ["21034", "Lego 21034", "21034 Lego", "Architecture 21034", "Londyn", "London", "21034 London"],
-      "price_to": 220,
-      "currency": "PLN",
-      "enabled": true
-    },
 
     {
       "id": "lego_21035_brand",
@@ -751,7 +665,7 @@
       "languages": [],
       "manual_keywords": ["21036", "Lego 21036", "21036 Lego", "Architecture 21036", "Łuk Triumfalny", "Arc de Triomphe", "21036 Arc de Triomphe"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -761,7 +675,7 @@
       "base_query": "21036",
       "languages": [],
       "manual_keywords": ["21036", "Lego 21036", "21036 Lego", "Architecture 21036", "Łuk Triumfalny", "Arc de Triomphe", "21036 Arc de Triomphe"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -795,7 +709,7 @@
       "languages": [],
       "manual_keywords": ["21039", "Lego 21039", "21039 Lego", "Architecture 21039", "Szanghaj", "Shanghai", "21039 Shanghai"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -805,7 +719,7 @@
       "base_query": "21039",
       "languages": [],
       "manual_keywords": ["21039", "Lego 21039", "21039 Lego", "Architecture 21039", "Szanghaj", "Shanghai", "21039 Shanghai"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -817,7 +731,7 @@
       "languages": [],
       "manual_keywords": ["21041", "Lego 21041", "21041 Lego", "Architecture 21041", "Wielki Mur Chiński", "Great Wall of China", "21041 Great Wall"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -827,7 +741,7 @@
       "base_query": "21041",
       "languages": [],
       "manual_keywords": ["21041", "Lego 21041", "21041 Lego", "Architecture 21041", "Wielki Mur Chiński", "Great Wall of China", "21041 Great Wall"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -839,7 +753,7 @@
       "languages": [],
       "manual_keywords": ["21042", "Lego 21042", "21042 Lego", "Architecture 21042", "Statua Wolności", "Statue of Liberty", "21042 Statue of Liberty"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 250,
       "currency": "PLN",
       "enabled": true
     },
@@ -849,7 +763,7 @@
       "base_query": "21042",
       "languages": [],
       "manual_keywords": ["21042", "Lego 21042", "21042 Lego", "Architecture 21042", "Statua Wolności", "Statue of Liberty", "21042 Statue of Liberty"],
-      "price_to": 400,
+      "price_to": 250,
       "currency": "PLN",
       "enabled": true
     },
@@ -861,7 +775,7 @@
       "languages": [],
       "manual_keywords": ["21043", "Lego 21043", "21043 Lego", "Architecture 21043", "San Francisco", "21043 San Francisco"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -871,32 +785,11 @@
       "base_query": "21043",
       "languages": [],
       "manual_keywords": ["21043", "Lego 21043", "21043 Lego", "Architecture 21043", "San Francisco", "21043 San Francisco"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
 
-    {
-      "id": "lego_21044_brand",
-      "name": "LEGO 21044 Paryż - marka",
-      "base_query": "21044",
-      "languages": [],
-      "manual_keywords": ["21044", "Lego 21044", "21044 Lego", "Architecture 21044", "Paryż", "Paris", "21044 Paris"],
-      "brand_ids": [89162],
-      "price_to": 400,
-      "currency": "PLN",
-      "enabled": true
-    },
-    {
-      "id": "lego_21044_wide",
-      "name": "LEGO 21044 Paryż - szerokie",
-      "base_query": "21044",
-      "languages": [],
-      "manual_keywords": ["21044", "Lego 21044", "21044 Lego", "Architecture 21044", "Paryż", "Paris", "21044 Paris"],
-      "price_to": 400,
-      "currency": "PLN",
-      "enabled": true
-    },
 
     {
       "id": "lego_21045_brand",
@@ -905,7 +798,7 @@
       "languages": [],
       "manual_keywords": ["21045", "Lego 21045", "21045 Lego", "Architecture 21045", "Trafalgar Square", "21045 Trafalgar Square"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -915,7 +808,7 @@
       "base_query": "21045",
       "languages": [],
       "manual_keywords": ["21045", "Lego 21045", "21045 Lego", "Architecture 21045", "Trafalgar Square", "21045 Trafalgar Square"],
-      "price_to": 400,
+      "price_to": 200,
       "currency": "PLN",
       "enabled": true
     },
@@ -927,7 +820,7 @@
       "languages": [],
       "manual_keywords": ["21046", "Lego 21046", "21046 Lego", "Architecture 21046", "Empire State Building", "21046 Empire State Building"],
       "brand_ids": [89162],
-      "price_to": 400,
+      "price_to": 250,
       "currency": "PLN",
       "enabled": true
     },
@@ -937,7 +830,7 @@
       "base_query": "21046",
       "languages": [],
       "manual_keywords": ["21046", "Lego 21046", "21046 Lego", "Architecture 21046", "Empire State Building", "21046 Empire State Building"],
-      "price_to": 400,
+      "price_to": 250,
       "currency": "PLN",
       "enabled": true
     },
