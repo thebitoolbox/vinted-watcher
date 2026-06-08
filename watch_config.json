@@ -1,4 +1,11 @@
 {
+    "exclude_keywords": [
+    "minecraft",
+    "duplo",
+    "brickheadz",
+    "botanicals",
+    "ninjago"
+  ],
   "searches": [
     {
       "id": "lego_21000_brand",
