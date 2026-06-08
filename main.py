@@ -188,6 +188,17 @@ def should_exclude_item(item: Dict[str, Any], exclude_keywords: List[str]) -> bo
     return False
 
 
+def matches_keywords(item: Dict[str, Any], keywords: List[str]) -> bool:
+    haystack = normalize_text(get_item_title(item) + " " + get_item_description(item))
+
+    for keyword in keywords:
+        keyword_norm = normalize_text(str(keyword).strip())
+        if keyword_norm and keyword_norm in haystack:
+            return True
+
+    return False
+
+
 def fetch_items_for_keyword(search: Dict[str, Any], keyword: str) -> List[Dict[str, Any]]:
     params = build_params(search, keyword)
     response = SESSION.get(VINTED_CATALOG_URL, params=params, timeout=HTTP_TIMEOUT)
@@ -238,6 +249,13 @@ def search_items(search: Dict[str, Any]) -> List[Dict[str, Any]]:
             results.append(item)
 
         time.sleep(0.8)
+
+    if deduped_keywords:
+        before_count = len(results)
+        results = [item for item in results if matches_keywords(item, deduped_keywords)]
+        removed_count = before_count - len(results)
+        if removed_count > 0:
+            print(f"[INFO] search={search.get('id')} keyword_filter_removed={removed_count}")
 
     return results
 
