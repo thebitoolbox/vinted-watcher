@@ -52,14 +52,24 @@ def save_json(path: Path, data: Any) -> None:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
-def load_config() -> List[Dict[str, Any]]:
-    payload = load_json(CONFIG_PATH, {"searches": []})
-    searches = payload.get("searches", [])
+def load_config() -> Dict[str, Any]:
+    payload = load_json(
+        CONFIG_PATH,
+        {
+            "searches": [],
+            "exclude_keywords": [],
+        },
+    )
 
+    searches = payload.get("searches", [])
     if not isinstance(searches, list):
         raise ValueError("watch_config.json ma niepoprawny format: 'searches' musi być listą")
 
-    return searches
+    exclude_keywords = payload.get("exclude_keywords", [])
+    if not isinstance(exclude_keywords, list):
+        raise ValueError("watch_config.json ma niepoprawny format: 'exclude_keywords' musi być listą")
+
+    return payload
 
 
 def load_state() -> Dict[str, Any]:
@@ -121,6 +131,15 @@ def get_item_title(item: Dict[str, Any]) -> str:
     return str(item.get("title") or item.get("name") or "Bez tytułu")
 
 
+def get_item_description(item: Dict[str, Any]) -> str:
+    return str(
+        item.get("description")
+        or item.get("item_description")
+        or item.get("brief_description")
+        or ""
+    )
+
+
 def get_item_url(item: Dict[str, Any]) -> str:
     raw = str(item.get("url") or item.get("path") or "")
 
@@ -152,6 +171,21 @@ def get_item_price(item: Dict[str, Any]) -> str:
         return str(total_price)
 
     return "brak ceny"
+
+
+def normalize_text(text: str) -> str:
+    return str(text).casefold()
+
+
+def should_exclude_item(item: Dict[str, Any], exclude_keywords: List[str]) -> bool:
+    haystack = normalize_text(get_item_title(item) + " " + get_item_description(item))
+
+    for keyword in exclude_keywords:
+        keyword_norm = normalize_text(str(keyword).strip())
+        if keyword_norm and keyword_norm in haystack:
+            return True
+
+    return False
 
 
 def fetch_items_for_keyword(search: Dict[str, Any], keyword: str) -> List[Dict[str, Any]]:
@@ -291,7 +325,12 @@ def send_telegram_message(text: str) -> None:
 def main() -> None:
     warmup_session()
 
-    searches = load_config()
+    config = load_config()
+    searches = config.get("searches", [])
+    global_exclude_keywords = [
+        str(x).strip() for x in config.get("exclude_keywords", []) if str(x).strip()
+    ]
+
     state = load_state()
 
     seen_global: Set[str] = set(str(x) for x in state.get("seen_ids", []))
@@ -312,7 +351,21 @@ def main() -> None:
             continue
 
         print(f"[INFO] Running search: {search_id}")
+
+        per_search_exclude = [
+            str(x).strip() for x in search.get("exclude_keywords", []) or [] if str(x).strip()
+        ]
+        exclude_keywords = global_exclude_keywords + per_search_exclude
+
         items = search_items(search)
+
+        if exclude_keywords:
+            before_count = len(items)
+            items = [item for item in items if not should_exclude_item(item, exclude_keywords)]
+            filtered_out = before_count - len(items)
+            if filtered_out > 0:
+                print(f"[INFO] search={search_id} excluded={filtered_out}")
+
         new_items = filter_new_items(search_id, items, seen_global, seen_by_search)
 
         print(f"[INFO] search={search_id} fetched={len(items)} new={len(new_items)}")
