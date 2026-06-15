@@ -1178,7 +1178,31 @@
       "price_to": 400,
       "currency": "PLN",
       "enabled": true
-    }
+    },
+      {
+  "id": "lego75274_image",
+  "name": "LEGO 75274 TIE Fighter Pilot Helmet - obraz",
+  "base_query": "lego helmet",
+  "manual_keywords": [
+    "75274",
+    "tie fighter pilot helmet",
+    "tie fighter helmet",
+    "star wars helmet",
+    "lego helmet"
+  ],
+  "exclude_keywords": [
+    "technic",
+    "duplo"
+  ],
+  "reference_images": [
+    "refs/75274_1.jpg",
+    "refs/75274_2.jpg",
+    "refs/75274_3.jpg"
+  ],
+  "image_similarity_threshold": 0.86,
+  "min_price": 100,
+  "enabled": true
+}
 
   ]
 }
