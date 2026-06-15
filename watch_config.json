@@ -1195,9 +1195,9 @@
     "duplo"
   ],
   "reference_images": [
-    "refs/75274_1.jpg",
-    "refs/75274_2.jpg",
-    "refs/75274_3.jpg"
+    "refs/75274_front.jpg",
+    "refs/75274_angle.jpg",
+    "refs/75274_side.jpg"
   ],
   "image_similarity_threshold": 0.86,
   "min_price": 100,
