@@ -2,9 +2,8 @@ requests==2.32.3
 beautifulsoup4==4.12.3
 lxml==5.2.2
 deep-translator==1.11.4
+Pillow==10.4.0
+numpy==2.1.1
+torch==2.4.1
+open-clip-torch==2.26.1
 curl-cffi==0.7.1
-curl-cffi
-pillow
-numpy
-torch
-open-clip-torch
