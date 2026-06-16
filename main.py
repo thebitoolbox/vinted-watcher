@@ -4,15 +4,19 @@ import os
 import time
 import unicodedata
 from functools import lru_cache
+from io import BytesIO
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
+import numpy as np
+import open_clip
+import torch
+from PIL import Image
 from curl_cffi import requests
 from deep_translator import GoogleTranslator
 
-BASE_DIR = Path(__file__).resolve().parent
-CONFIG_PATH = BASE_DIR / "watch_config.json"
-STATE_PATH = BASE_DIR / "seen_items.json"
+CONFIG_PATH = Path("watch_config.json")
+STATE_PATH = Path("seen_items.json")
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
@@ -26,6 +30,18 @@ TRANSLATE_MAX_TEXT_LEN = int(os.getenv("TRANSLATE_MAX_TEXT_LEN", "1200"))
 
 VINTED_BASE_URL = "https://www.vinted.pl"
 VINTED_CATALOG_URL = "https://www.vinted.pl/api/v2/catalog/items"
+
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+CLIP_MODEL_NAME = os.getenv("CLIP_MODEL_NAME", "ViT-B-32")
+CLIP_PRETRAINED = os.getenv("CLIP_PRETRAINED", "laion2b_s34b_b79k")
+
+MODEL, _, PREPROCESS = open_clip.create_model_and_transforms(
+    CLIP_MODEL_NAME,
+    pretrained=CLIP_PRETRAINED,
+)
+MODEL = MODEL.to(DEVICE).eval()
+
+REFERENCE_EMBEDDINGS: Dict[str, List[np.ndarray]] = {}
 
 
 def build_session() -> requests.Session:
@@ -55,6 +71,7 @@ def warmup_session() -> None:
 def load_json(path: Path, default: Any) -> Any:
     if not path.exists():
         return default
+
     with path.open("r", encoding="utf-8") as f:
         return json.load(f)
 
@@ -62,26 +79,6 @@ def load_json(path: Path, default: Any) -> Any:
 def save_json(path: Path, data: Any) -> None:
     with path.open("w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
-
-
-def load_string_list(value: Any) -> List[str]:
-    if not isinstance(value, list):
-        return []
-    return [str(x).strip() for x in value if str(x).strip()]
-
-
-def strip_accents(text: str) -> str:
-    normalized = unicodedata.normalize("NFKD", str(text or ""))
-    return "".join(ch for ch in normalized if not unicodedata.combining(ch))
-
-
-def normalize_text(text: str) -> str:
-    text = str(text or "")
-    text = unicodedata.normalize("NFKC", text)
-    text = strip_accents(text)
-    text = text.casefold()
-    text = " ".join(text.split())
-    return text.strip()
 
 
 def load_config() -> Dict[str, Any]:
@@ -124,6 +121,26 @@ def save_state(state: Dict[str, Any]) -> None:
 
     state["seen_by_search"] = normalized_seen_by_search
     save_json(STATE_PATH, state)
+
+
+def load_string_list(value: Any) -> List[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(x).strip() for x in value if str(x).strip()]
+
+
+def strip_accents(text: str) -> str:
+    normalized = unicodedata.normalize("NFKD", str(text or ""))
+    return "".join(ch for ch in normalized if not unicodedata.combining(ch))
+
+
+def normalize_text(text: str) -> str:
+    text = str(text or "")
+    text = unicodedata.normalize("NFKC", text)
+    text = strip_accents(text)
+    text = text.casefold()
+    text = " ".join(text.split())
+    return text.strip()
 
 
 def build_params(search: Dict[str, Any], keyword: str) -> Dict[str, Any]:
@@ -195,6 +212,10 @@ def get_item_description(item: Dict[str, Any]) -> str:
     )
 
 
+def build_item_text(item: Dict[str, Any]) -> str:
+    return (get_item_title(item) + " " + get_item_description(item)).strip()
+
+
 def get_item_url(item: Dict[str, Any]) -> str:
     raw = str(item.get("url") or item.get("path") or "")
 
@@ -254,8 +275,24 @@ def get_item_price(item: Dict[str, Any]) -> str:
     return "brak ceny"
 
 
-def build_item_text(item: Dict[str, Any]) -> str:
-    return (get_item_title(item) + " " + get_item_description(item)).strip()
+def get_item_image_url(item: Dict[str, Any]) -> str:
+    photos = item.get("photos")
+    if isinstance(photos, list) and photos:
+        first = photos[0]
+        if isinstance(first, dict):
+            for key in ("url", "full_size_url", "large_url", "image_url"):
+                value = first.get(key)
+                if value:
+                    return str(value)
+
+    photo = item.get("photo")
+    if isinstance(photo, dict):
+        for key in ("url", "full_size_url", "large_url", "image_url"):
+            value = photo.get(key)
+            if value:
+                return str(value)
+
+    return ""
 
 
 @lru_cache(maxsize=5000)
@@ -282,6 +319,142 @@ def should_try_translation(search: Dict[str, Any]) -> bool:
     return len(languages) > 0
 
 
+def get_translated_item_text(search: Dict[str, Any], item: Dict[str, Any]) -> str:
+    if not should_try_translation(search):
+        return ""
+
+    cached = str(item.get("_translated_text") or "").strip()
+    if cached:
+        return cached
+
+    raw_text = build_item_text(item)
+    translated = translate_text_cached(raw_text, TRANSLATE_TARGET_LANG)
+    if translated:
+        item["_translated_text"] = translated
+    return translated
+
+
+def matches_keywords_in_text(text: str, keywords: List[str]) -> bool:
+    haystack = normalize_text(text)
+
+    for keyword in keywords:
+        keyword_norm = normalize_text(keyword)
+        if keyword_norm and keyword_norm in haystack:
+            return True
+
+    return False
+
+
+def should_exclude_item(search: Dict[str, Any], item: Dict[str, Any], exclude_keywords: List[str]) -> bool:
+    raw_text = build_item_text(item)
+
+    if matches_keywords_in_text(raw_text, exclude_keywords):
+        return True
+
+    translated_text = get_translated_item_text(search, item)
+    if translated_text and matches_keywords_in_text(translated_text, exclude_keywords):
+        return True
+
+    return False
+
+
+def matches_keywords(search: Dict[str, Any], item: Dict[str, Any], keywords: List[str]) -> bool:
+    raw_text = build_item_text(item)
+
+    if matches_keywords_in_text(raw_text, keywords):
+        return True
+
+    translated_text = get_translated_item_text(search, item)
+    if translated_text and matches_keywords_in_text(translated_text, keywords):
+        return True
+
+    return False
+
+
+def download_image(url: str) -> Optional[Image.Image]:
+    if not url:
+        return None
+
+    try:
+        response = SESSION.get(url, timeout=HTTP_TIMEOUT)
+        response.raise_for_status()
+        image = Image.open(BytesIO(response.content))
+        return image.convert("RGB")
+    except Exception as exc:
+        print(f"[WARN] image download failed url={url} err={exc}")
+        return None
+
+
+def encode_pil_image(image: Image.Image) -> np.ndarray:
+    image_input = PREPROCESS(image).unsqueeze(0).to(DEVICE)
+
+    with torch.no_grad():
+        image_features = MODEL.encode_image(image_input)
+        image_features /= image_features.norm(dim=-1, keepdim=True)
+
+    return image_features[0].detach().cpu().numpy()
+
+
+def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
+    denom = np.linalg.norm(a) * np.linalg.norm(b)
+    if denom == 0:
+        return 0.0
+    return float(np.dot(a, b) / denom)
+
+
+def load_reference_embeddings(search: Dict[str, Any]) -> List[np.ndarray]:
+    search_id = str(search.get("id") or "").strip()
+    if not search_id:
+        return []
+
+    cached = REFERENCE_EMBEDDINGS.get(search_id)
+    if cached is not None:
+        return cached
+
+    refs: List[np.ndarray] = []
+
+    for path_str in load_string_list(search.get("reference_images", [])):
+        path = Path(path_str)
+        if not path.exists():
+            print(f"[WARN] reference image not found: {path}")
+            continue
+
+        try:
+            image = Image.open(path).convert("RGB")
+            refs.append(encode_pil_image(image))
+        except Exception as exc:
+            print(f"[WARN] failed to load reference image {path}: {exc}")
+
+    REFERENCE_EMBEDDINGS[search_id] = refs
+    return refs
+
+
+def image_similarity_score(item: Dict[str, Any], ref_embeddings: List[np.ndarray]) -> float:
+    if not ref_embeddings:
+        return 0.0
+
+    image_url = get_item_image_url(item)
+    image = download_image(image_url)
+    if image is None:
+        return 0.0
+
+    try:
+        item_embedding = encode_pil_image(image)
+    except Exception as exc:
+        print(f"[WARN] image encode failed url={image_url} err={exc}")
+        return 0.0
+
+    return max(cosine_similarity(item_embedding, ref) for ref in ref_embeddings)
+
+
+def fetch_items_for_keyword(search: Dict[str, Any], keyword: str) -> List[Dict[str, Any]]:
+    params = build_params(search, keyword)
+    response = SESSION.get(VINTED_CATALOG_URL, params=params, timeout=HTTP_TIMEOUT)
+    response.raise_for_status()
+    payload = response.json()
+    return extract_items(payload)
+
+
 def get_search_keywords(search: Dict[str, Any]) -> List[str]:
     keywords: List[str] = []
 
@@ -305,66 +478,6 @@ def get_search_keywords(search: Dict[str, Any]) -> List[str]:
         deduped_keywords.append(keyword)
 
     return deduped_keywords
-
-
-def matches_keywords_in_text(text: str, keywords: List[str]) -> bool:
-    haystack = normalize_text(text)
-
-    for keyword in keywords:
-        keyword_norm = normalize_text(keyword)
-        if keyword_norm and keyword_norm in haystack:
-            return True
-
-    return False
-
-
-def get_translated_item_text(search: Dict[str, Any], item: Dict[str, Any]) -> str:
-    if not should_try_translation(search):
-        return ""
-
-    cached = str(item.get("_translated_text") or "").strip()
-    if cached:
-        return cached
-
-    raw_text = build_item_text(item)
-    translated = translate_text_cached(raw_text, TRANSLATE_TARGET_LANG)
-    if translated:
-        item["_translated_text"] = translated
-    return translated
-
-
-def item_matches_keywords(search: Dict[str, Any], item: Dict[str, Any], keywords: List[str]) -> bool:
-    raw_text = build_item_text(item)
-
-    if matches_keywords_in_text(raw_text, keywords):
-        return True
-
-    translated_text = get_translated_item_text(search, item)
-    if translated_text and matches_keywords_in_text(translated_text, keywords):
-        return True
-
-    return False
-
-
-def should_exclude_item(search: Dict[str, Any], item: Dict[str, Any], exclude_keywords: List[str]) -> bool:
-    raw_text = build_item_text(item)
-
-    if matches_keywords_in_text(raw_text, exclude_keywords):
-        return True
-
-    translated_text = get_translated_item_text(search, item)
-    if translated_text and matches_keywords_in_text(translated_text, exclude_keywords):
-        return True
-
-    return False
-
-
-def fetch_items_for_keyword(search: Dict[str, Any], keyword: str) -> List[Dict[str, Any]]:
-    params = build_params(search, keyword)
-    response = SESSION.get(VINTED_CATALOG_URL, params=params, timeout=HTTP_TIMEOUT)
-    response.raise_for_status()
-    payload = response.json()
-    return extract_items(payload)
 
 
 def search_items(search: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -393,7 +506,7 @@ def search_items(search: Dict[str, Any]) -> List[Dict[str, Any]]:
 
     if deduped_keywords and search.get("require_keyword_match", True):
         before_count = len(results)
-        results = [item for item in results if item_matches_keywords(search, item, deduped_keywords)]
+        results = [item for item in results if matches_keywords(search, item, deduped_keywords)]
         removed_count = before_count - len(results)
         if removed_count > 0:
             print(f"[INFO] search={search.get('id')} keyword_filter_removed={removed_count}")
@@ -419,6 +532,35 @@ def filter_by_price(search: Dict[str, Any], items: List[Dict[str, Any]]) -> List
     if removed > 0:
         print(f"[INFO] search={search.get('id')} min_price_removed={removed}")
 
+    return kept
+
+
+def apply_image_filter(search: Dict[str, Any], items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    ref_embeddings = load_reference_embeddings(search)
+    if not ref_embeddings:
+        return items
+
+    threshold = float(search.get("image_similarity_threshold") or 0)
+    if threshold <= 0:
+        return items
+
+    manual_keywords = get_search_keywords(search)
+
+    kept: List[Dict[str, Any]] = []
+    scored = 0
+
+    for item in items:
+        text_match = matches_keywords(search, item, manual_keywords) if manual_keywords else False
+        score = image_similarity_score(item, ref_embeddings)
+        item["_image_similarity"] = score
+        scored += 1
+
+        if text_match or score >= threshold:
+            kept.append(item)
+
+    print(
+        f"[INFO] search={search.get('id')} image_scored={scored} kept={len(kept)} threshold={threshold}"
+    )
     return kept
 
 
@@ -472,8 +614,12 @@ def format_alert(search: Dict[str, Any], new_items: List[Dict[str, Any]]) -> str
         title = html.escape(get_item_title(item))
         price = html.escape(get_item_price(item))
         url = html.escape(get_item_url(item))
+        image_score = item.get("_image_similarity")
 
-        parts.append("• <b>" + title + "</b> — " + price)
+        line = "• <b>" + title + "</b> — " + price
+        if isinstance(image_score, (float, int)) and image_score > 0:
+            line += f" (img score: {float(image_score):.3f})"
+        parts.append(line)
 
         translated_text = str(item.get("_translated_text") or "").strip()
         if translated_text:
@@ -536,7 +682,7 @@ def main() -> None:
 
         print(f"[INFO] Running search: {search_id}")
 
-        per_search_exclude = load_string_list(search.get("exclude_keywords", []))
+        per_search_exclude = load_string_list(search.get("exclude_keywords", []) or [])
         exclude_keywords = global_exclude_keywords + per_search_exclude
 
         items = search_items(search)
@@ -548,6 +694,9 @@ def main() -> None:
             filtered_out = before_count - len(items)
             if filtered_out > 0:
                 print(f"[INFO] search={search_id} excluded={filtered_out}")
+
+        if search.get("reference_images"):
+            items = apply_image_filter(search, items)
 
         new_items = filter_new_items(search_id, items, seen_global, seen_by_search)
 
