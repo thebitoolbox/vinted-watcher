@@ -15,6 +15,10 @@ import torch
 from PIL import Image
 from curl_cffi import requests
 from deep_translator import GoogleTranslator
+from langdetect import DetectorFactory, detect
+from langdetect.lang_detect_exception import LangDetectException
+
+DetectorFactory.seed = 0
 
 CONFIG_PATH = Path("watch_config.json")
 STATE_PATH = Path("seen_items.json")
@@ -23,11 +27,13 @@ TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
 
 HTTP_TIMEOUT = int(os.getenv("HTTP_TIMEOUT", "30"))
+TELEGRAM_TIMEOUT = int(os.getenv("TELEGRAM_TIMEOUT", "60"))
 MAX_ALERTS_PER_MESSAGE = int(os.getenv("MAX_ALERTS", "10"))
-REQUEST_DELAY = float(os.getenv("REQUEST_DELAY", "0.8"))
+REQUEST_DELAY = float(os.getenv("REQUEST_DELAY", "0"))
 
 TRANSLATE_TARGET_LANG = os.getenv("TRANSLATE_TARGET_LANG", "en").strip() or "en"
 TRANSLATE_MAX_TEXT_LEN = int(os.getenv("TRANSLATE_MAX_TEXT_LEN", "1200"))
+SKIP_TRANSLATE_LANGS = {"pl", "en"}
 
 VINTED_BASE_URL = "https://www.vinted.pl"
 VINTED_CATALOG_URL = "https://www.vinted.pl/api/v2/catalog/items"
@@ -171,6 +177,21 @@ def normalize_text(text: str) -> str:
     text = text.casefold()
     text = " ".join(text.split())
     return text.strip()
+
+
+@lru_cache(maxsize=5000)
+def detect_language_cached(text: str) -> str:
+    normalized = normalize_text(text)
+    if not normalized or len(normalized) < 8:
+        return "unknown"
+
+    try:
+        return detect(normalized)
+    except LangDetectException:
+        return "unknown"
+    except Exception as exc:
+        print(f"[WARN] language detection failed: {exc}")
+        return "unknown"
 
 
 def build_params(search: Dict[str, Any], keyword: str) -> Dict[str, Any]:
@@ -327,7 +348,7 @@ def get_item_image_url(item: Dict[str, Any]) -> str:
 
 @lru_cache(maxsize=5000)
 def translate_text_cached(text: str, target_lang: str) -> str:
-    text = str(text or "").strip()
+    text = normalize_text(text)
     if not text:
         return ""
 
@@ -362,6 +383,16 @@ def get_translated_item_text(search: Dict[str, Any], item: Dict[str, Any]) -> st
         return cached
 
     raw_text = build_item_text(item)
+    if not raw_text.strip():
+        return ""
+
+    detected_lang = detect_language_cached(raw_text)
+    item["_detected_lang"] = detected_lang
+
+    if detected_lang in SKIP_TRANSLATE_LANGS:
+        item["_translated_text"] = raw_text
+        return raw_text
+
     translated = translate_text_cached(raw_text, TRANSLATE_TARGET_LANG)
     if translated:
         item["_translated_text"] = translated
@@ -497,18 +528,45 @@ def image_similarity_score(item: Dict[str, Any], ref_embeddings: List[np.ndarray
         inc_counter("image_similarity_calls_total")
 
 
+def get_retry_delay(attempt: int, base_delay: float = 1.0) -> float:
+    return base_delay * (2 ** (attempt - 1))
+
+
 def fetch_items_for_keyword(search: Dict[str, Any], keyword: str) -> List[Dict[str, Any]]:
-    started = perf_counter()
-    inc_counter("http_requests_total")
-    inc_counter("vinted_catalog_calls_total")
-
     params = build_params(search, keyword)
-    response = SESSION.get(VINTED_CATALOG_URL, params=params, timeout=HTTP_TIMEOUT)
-    response.raise_for_status()
-    payload = response.json()
+    retries = int(search.get("retries") or 3)
+    base_delay = float(search.get("retry_delay") or 1.0)
+    last_exc: Optional[Exception] = None
 
-    add_timing("http_vinted_catalog", started)
-    return extract_items(payload)
+    for attempt in range(1, retries + 1):
+        started = perf_counter()
+        inc_counter("http_requests_total")
+        inc_counter("vinted_catalog_calls_total")
+
+        try:
+            response = SESSION.get(VINTED_CATALOG_URL, params=params, timeout=HTTP_TIMEOUT)
+            response.raise_for_status()
+            payload = response.json()
+            add_timing("http_vinted_catalog", started)
+            return extract_items(payload)
+        except Exception as exc:
+            add_timing("http_vinted_catalog", started)
+            last_exc = exc
+            print(
+                f"[WARN] search={search.get('id')} keyword={keyword!r} "
+                f"attempt={attempt}/{retries} failed: {exc}"
+            )
+
+            if attempt < retries:
+                delay = get_retry_delay(attempt, base_delay)
+                print(f"[INFO] retrying in {delay:.1f}s")
+                time.sleep(delay)
+                TIMINGS["request_sleep"] = TIMINGS.get("request_sleep", 0.0) + delay
+
+    if last_exc:
+        raise last_exc
+
+    return []
 
 
 def get_search_keywords(search: Dict[str, Any]) -> List[str]:
@@ -536,12 +594,32 @@ def get_search_keywords(search: Dict[str, Any]) -> List[str]:
     return deduped_keywords
 
 
+def filter_by_price(search: Dict[str, Any], items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    min_price = search.get("min_price")
+    if min_price is None:
+        return items
+
+    kept: List[Dict[str, Any]] = []
+    removed = 0
+
+    for item in items:
+        price_value = get_item_price_value(item)
+        if price_value is None or price_value >= float(min_price):
+            kept.append(item)
+        else:
+            removed += 1
+
+    if removed > 0:
+        print(f"[INFO] search={search.get('id')} min_price_removed={removed}")
+
+    return kept
+
+
 def search_items(search: Dict[str, Any]) -> List[Dict[str, Any]]:
     started = perf_counter()
     results: List[Dict[str, Any]] = []
     seen_local: Set[str] = set()
     deduped_keywords = get_search_keywords(search)
-    total_sleep_time = 0.0
 
     for keyword in deduped_keywords:
         keyword_started = perf_counter()
@@ -563,46 +641,39 @@ def search_items(search: Dict[str, Any]) -> List[Dict[str, Any]]:
             seen_local.add(item_id)
             results.append(item)
 
-        delay = float(search.get("request_delay") or REQUEST_DELAY)
-        total_sleep_time += delay
-        time.sleep(delay)
+        if REQUEST_DELAY > 0:
+            time.sleep(REQUEST_DELAY)
+            TIMINGS["request_sleep"] = TIMINGS.get("request_sleep", 0.0) + REQUEST_DELAY
+
         add_timing(f"search_keyword:{search.get('id')}:{keyword}", keyword_started)
 
-    if total_sleep_time > 0:
-        TIMINGS["request_sleep"] = TIMINGS.get("request_sleep", 0.0) + total_sleep_time
+    results = filter_by_price(search, results)
 
     if deduped_keywords and search.get("require_keyword_match", True):
         filter_started = perf_counter()
         before_count = len(results)
-        results = [item for item in results if matches_keywords(search, item, deduped_keywords)]
+        matched: List[Dict[str, Any]] = []
+
+        for item in results:
+            raw_text = build_item_text(item)
+
+            if matches_keywords_in_text(raw_text, deduped_keywords):
+                matched.append(item)
+                continue
+
+            translated_text = get_translated_item_text(search, item)
+            if translated_text and matches_keywords_in_text(translated_text, deduped_keywords):
+                matched.append(item)
+
+        results = matched
         removed_count = before_count - len(results)
         if removed_count > 0:
             print(f"[INFO] search={search.get('id')} keyword_filter_removed={removed_count}")
+
         add_timing(f"keyword_match_filter:{search.get('id')}", filter_started)
 
     add_timing(f"search_items:{search.get('id')}", started)
     return results
-
-
-def filter_by_price(search: Dict[str, Any], items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    min_price = search.get("min_price")
-    if min_price is None:
-        return items
-
-    kept: List[Dict[str, Any]] = []
-    removed = 0
-
-    for item in items:
-        price_value = get_item_price_value(item)
-        if price_value is None or price_value >= float(min_price):
-            kept.append(item)
-        else:
-            removed += 1
-
-    if removed > 0:
-        print(f"[INFO] search={search.get('id')} min_price_removed={removed}")
-
-    return kept
 
 
 def apply_image_filter(search: Dict[str, Any], items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -696,7 +767,7 @@ def format_alert(search: Dict[str, Any], new_items: List[Dict[str, Any]]) -> str
         parts.append(line)
 
         translated_text = str(item.get("_translated_text") or "").strip()
-        if translated_text:
+        if translated_text and normalize_text(translated_text) != normalize_text(build_item_text(item)):
             translated_short = html.escape(translated_text[:220])
             parts.append("<i>Tłumaczenie:</i> " + translated_short)
 
@@ -725,7 +796,6 @@ def send_telegram_message(text: str) -> bool:
     }
 
     retries = 2
-    telegram_timeout = int(os.getenv("TELEGRAM_TIMEOUT", "60"))
 
     for attempt in range(1, retries + 1):
         started = perf_counter()
@@ -733,7 +803,7 @@ def send_telegram_message(text: str) -> bool:
         inc_counter("telegram_calls_total")
 
         try:
-            response = SESSION.post(url, json=payload, timeout=telegram_timeout)
+            response = SESSION.post(url, json=payload, timeout=TELEGRAM_TIMEOUT)
             response.raise_for_status()
             add_timing("telegram_send", started)
             print(f"[INFO] Telegram sent on attempt {attempt}")
@@ -743,9 +813,10 @@ def send_telegram_message(text: str) -> bool:
             print(f"[WARN] Telegram send failed attempt={attempt}/{retries} err={exc}")
 
             if attempt < retries:
-                sleep_s = 5 * attempt
-                print(f"[INFO] Retrying Telegram in {sleep_s}s")
-                time.sleep(sleep_s)
+                delay = get_retry_delay(attempt, 2.0)
+                print(f"[INFO] Retrying Telegram in {delay:.1f}s")
+                time.sleep(delay)
+                TIMINGS["request_sleep"] = TIMINGS.get("request_sleep", 0.0) + delay
 
     print("[ERROR] Telegram message not sent after retries")
     return False
@@ -754,12 +825,12 @@ def send_telegram_message(text: str) -> bool:
 def main() -> None:
     total_started = perf_counter()
 
-    config_started = perf_counter()
+    bootstrap_started = perf_counter()
     warmup_session()
     config = load_config()
     searches = config.get("searches", [])
     global_exclude_keywords = load_string_list(config.get("exclude_keywords", []))
-    add_timing("bootstrap", config_started)
+    add_timing("bootstrap", bootstrap_started)
 
     state_started = perf_counter()
     state = load_state()
@@ -791,10 +862,6 @@ def main() -> None:
         step_started = perf_counter()
         items = search_items(search)
         add_timing(f"step_search_items:{search_id}", step_started)
-
-        step_started = perf_counter()
-        items = filter_by_price(search, items)
-        add_timing(f"step_filter_by_price:{search_id}", step_started)
 
         if exclude_keywords:
             step_started = perf_counter()
