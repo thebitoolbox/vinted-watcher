@@ -4,7 +4,8 @@
     "duplo",
     "brickheadz",
     "botanicals",
-    "ninjago"
+    "ninjago",
+    "puzzle"    
   ],
   "searches": [
     {
@@ -1595,115 +1596,6 @@
       "price_to": 500,
       "request_delay": 0.8,
       "enabled": true
-    },
-      {
-      "id": "75265_text",
-      "name": "75265 T-16 Skyhopper vs Bantha | brać do 35 zł",
-      "enabled": true,
-      "translate": true,
-      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
-      "base_query": "75265",
-      "manual_keywords": [
-        "75265",
-        "T-16 Skyhopper",
-        "Bantha Microfighters",
-        "microfighters",
-        "star wars microfighter"
-      ],
-      "buy_below": 35,
-      "price_to": 120,
-      "request_delay": 0.8
-    },
-    {
-      "id": "75295_text",
-      "name": "75295 Millennium Falcon Microfighter | brać do 20 zł",
-      "enabled": true,
-      "translate": true,
-      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
-      "base_query": "75295",
-      "manual_keywords": [
-        "75295",
-        "Millennium Falcon Microfighter",
-        "Falcon Microfighter",
-        "microfighter",
-        "han solo"
-      ],
-      "buy_below": 20,
-      "price_to": 80,
-      "request_delay": 0.8
-    },
-    {
-      "id": "75344_text",
-      "name": "75344 Boba Fett's Starship Microfighter | brać do 25 zł",
-      "enabled": true,
-      "translate": true,
-      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
-      "base_query": "75344",
-      "manual_keywords": [
-        "75344",
-        "Boba Fett",
-        "Boba Fett's Starship",
-        "microfighter",
-        "star wars microfighter"
-      ],
-      "buy_below": 25,
-      "price_to": 90,
-      "request_delay": 0.8
-    },
-    {
-      "id": "76916_text",
-      "name": "76916 Porsche 963 | brać do 50 zł",
-      "enabled": true,
-      "translate": true,
-      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
-      "base_query": "76916",
-      "manual_keywords": [
-        "76916",
-        "Porsche 963",
-        "Speed Champions",
-        "porsche",
-        "lego car"
-      ],
-      "buy_below": 50,
-      "price_to": 160,
-      "request_delay": 0.8
-    },
-    {
-      "id": "76917_text",
-      "name": "76917 Nissan Skyline GT-R | brać do 45 zł",
-      "enabled": true,
-      "translate": true,
-      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
-      "base_query": "76917",
-      "manual_keywords": [
-        "76917",
-        "Nissan Skyline",
-        "GT-R",
-        "Speed Champions",
-        "2 Fast 2 Furious"
-      ],
-      "buy_below": 45,
-      "price_to": 160,
-      "request_delay": 0.8
-    },
-    {
-      "id": "76420_text",
-      "name": "76420 Black Lake | brać do 60 zł",
-      "enabled": true,
-      "translate": true,
-      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
-      "base_query": "76420",
-      "manual_keywords": [
-        "76420",
-        "Black Lake",
-        "Triwizard Tournament",
-        "Harry Potter",
-        "Hogwarts"
-      ],
-      "buy_below": 60,
-      "price_to": 220,
-      "request_delay": 0.8
     }
-
   ]
 }
