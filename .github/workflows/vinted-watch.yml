@@ -17,6 +17,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set start timestamp
+        id: start_time
+        run: echo "ts=$(date +%s)" >> "$GITHUB_OUTPUT"
+
       - name: Checkout repository
         uses: actions/checkout@v5
 
@@ -46,4 +50,14 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add seen_items.json
           git commit -m "Update seen items"
+          git pull --rebase origin main
           git push
+
+      - name: Print total duration
+        if: always()
+        run: |
+          end_ts=$(date +%s)
+          start_ts=${{ steps.start_time.outputs.ts }}
+          duration=$((end_ts - start_ts))
+          echo "TOTAL_DURATION_SECONDS=$duration"
+          echo "TOTAL_DURATION_MINUTES=$((duration / 60))"
