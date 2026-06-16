@@ -1299,7 +1299,155 @@
   "image_similarity_threshold": 0.86,
   "min_price": 100,
   "enabled": true
-}
+},
+      {
+      "id": "21021_marinabay_image",
+      "name": "LEGO 21021 Marina Bay Sands",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "21021",
+      "manual_keywords": [
+        "21021",
+        "Marina Bay Sands",
+        "Singapore skyline",
+        "Sands SkyPark"
+      ],
+      "reference_images": [
+        "refs/21021_front.jpg",
+        "refs/21021_side.jpg",
+        "refs/21021_angle.jpg"
+      ],
+      "image_similarity_threshold": 0.86,
+      "request_delay": 0.8
+    },
+    {
+      "id": "75192_image",
+      "name": "LEGO 75192 Millennium Falcon",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "75192",
+      "manual_keywords": [
+        "75192",
+        "Millennium Falcon",
+        "UCS Falcon",
+        "Sokół Millennium",
+        "Sokol Millennium"
+      ],
+      "reference_images": [
+        "refs/75192_front.jpg",
+        "refs/75192_side.jpg",
+        "refs/75192_angle.jpg"
+      ],
+      "image_similarity_threshold": 0.85,
+      "request_delay": 0.8
+    },
+    {
+      "id": "10256_image",
+      "name": "LEGO 10256 Taj Mahal",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "10256",
+      "manual_keywords": [
+        "10256",
+        "Taj Mahal",
+        "Creator Expert Taj Mahal",
+        "LEGO Taj Mahal"
+      ],
+      "reference_images": [
+        "refs/10256_front.jpg",
+        "refs/10256_side.jpg",
+        "refs/10256_angle.jpg"
+      ],
+      "image_similarity_threshold": 0.84,
+      "request_delay": 0.8
+    },
+    {
+      "id": "10316_image",
+      "name": "LEGO 10316 Rivendell",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "10316",
+      "manual_keywords": [
+        "10316",
+        "Rivendell",
+        "Lord of the Rings Rivendell",
+        "LEGO Rivendell"
+      ],
+      "reference_images": [
+        "refs/10316_front.jpg",
+        "refs/10316_side.jpg",
+        "refs/10316_angle.jpg"
+      ],
+      "image_similarity_threshold": 0.86,
+      "request_delay": 0.8
+    },
+    {
+      "id": "21063_image",
+      "name": "LEGO 21063 Neuschwanstein Castle",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "21063",
+      "manual_keywords": [
+        "21063",
+        "Neuschwanstein Castle",
+        "Schloss Neuschwanstein",
+        "LEGO Neuschwanstein"
+      ],
+      "reference_images": [
+        "refs/21063_front.jpg",
+        "refs/21063_side.jpg",
+        "refs/21063_angle.jpg"
+      ],
+      "image_similarity_threshold": 0.86,
+      "request_delay": 0.8
+    },
+    {
+      "id": "21318_image",
+      "name": "LEGO 21318 Tree House",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "21318",
+      "manual_keywords": [
+        "21318",
+        "Tree House",
+        "LEGO Tree House",
+        "Ideas Tree House"
+      ],
+      "reference_images": [
+        "refs/21318_front.jpg",
+        "refs/21318_side.jpg",
+        "refs/21318_angle.jpg"
+      ],
+      "image_similarity_threshold": 0.84,
+      "request_delay": 0.8
+    },
+    {
+      "id": "10228_image",
+      "name": "LEGO 10228 Haunted House",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "10228",
+      "manual_keywords": [
+        "10228",
+        "Haunted House",
+        "Monster Fighters Haunted House",
+        "LEGO Haunted House"
+      ],
+      "reference_images": [
+        "refs/10228_front.jpg",
+        "refs/10228_side.jpg",
+        "refs/10228_angle.jpg"
+      ],
+      "image_similarity_threshold": 0.85,
+      "request_delay": 0.8
+    }
 
   ]
 }
