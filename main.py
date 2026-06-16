@@ -6,6 +6,7 @@ import unicodedata
 from functools import lru_cache
 from io import BytesIO
 from pathlib import Path
+from time import perf_counter
 from typing import Any, Dict, List, Optional, Set
 
 import numpy as np
@@ -42,6 +43,32 @@ MODEL, _, PREPROCESS = open_clip.create_model_and_transforms(
 MODEL = MODEL.to(DEVICE).eval()
 
 REFERENCE_EMBEDDINGS: Dict[str, List[np.ndarray]] = {}
+TIMINGS: Dict[str, float] = {}
+COUNTERS: Dict[str, int] = {}
+
+
+def add_timing(name: str, started_at: float) -> None:
+    TIMINGS[name] = TIMINGS.get(name, 0.0) + (perf_counter() - started_at)
+
+
+def inc_counter(name: str, value: int = 1) -> None:
+    COUNTERS[name] = COUNTERS.get(name, 0) + value
+
+
+def log_timing_summary() -> None:
+    print("[TIMING] ---- summary ----")
+    total = sum(TIMINGS.values())
+
+    for key, value in sorted(TIMINGS.items(), key=lambda x: x[1], reverse=True):
+        pct = (value / total * 100) if total > 0 else 0
+        print(f"[TIMING] {key}={value:.2f}s ({pct:.1f}%)")
+
+    print(f"[TIMING] total_measured={total:.2f}s")
+
+    if COUNTERS:
+        print("[TIMING] ---- counters ----")
+        for key, value in sorted(COUNTERS.items()):
+            print(f"[TIMING] {key}={value}")
 
 
 def build_session() -> requests.Session:
@@ -64,8 +91,11 @@ SESSION = build_session()
 
 
 def warmup_session() -> None:
+    started = perf_counter()
     response = SESSION.get(VINTED_BASE_URL, timeout=HTTP_TIMEOUT)
     response.raise_for_status()
+    add_timing("warmup_session", started)
+    inc_counter("http_requests_total")
 
 
 def load_json(path: Path, default: Any) -> Any:
@@ -302,6 +332,8 @@ def translate_text_cached(text: str, target_lang: str) -> str:
         return ""
 
     clipped = text[:TRANSLATE_MAX_TEXT_LEN]
+    started = perf_counter()
+    inc_counter("translate_calls_total")
 
     try:
         translator = GoogleTranslator(source="auto", target=target_lang)
@@ -310,6 +342,8 @@ def translate_text_cached(text: str, target_lang: str) -> str:
     except Exception as exc:
         print(f"[WARN] translation failed: {exc}")
         return clipped
+    finally:
+        add_timing("translate_text", started)
 
 
 def should_try_translation(search: Dict[str, Any]) -> bool:
@@ -375,6 +409,10 @@ def download_image(url: str) -> Optional[Image.Image]:
     if not url:
         return None
 
+    started = perf_counter()
+    inc_counter("http_requests_total")
+    inc_counter("image_download_calls_total")
+
     try:
         response = SESSION.get(url, timeout=HTTP_TIMEOUT)
         response.raise_for_status()
@@ -383,15 +421,20 @@ def download_image(url: str) -> Optional[Image.Image]:
     except Exception as exc:
         print(f"[WARN] image download failed url={url} err={exc}")
         return None
+    finally:
+        add_timing("download_image", started)
 
 
 def encode_pil_image(image: Image.Image) -> np.ndarray:
+    started = perf_counter()
     image_input = PREPROCESS(image).unsqueeze(0).to(DEVICE)
 
     with torch.no_grad():
         image_features = MODEL.encode_image(image_input)
         image_features /= image_features.norm(dim=-1, keepdim=True)
 
+    add_timing("encode_image", started)
+    inc_counter("encode_image_calls_total")
     return image_features[0].detach().cpu().numpy()
 
 
@@ -411,6 +454,7 @@ def load_reference_embeddings(search: Dict[str, Any]) -> List[np.ndarray]:
     if cached is not None:
         return cached
 
+    started = perf_counter()
     refs: List[np.ndarray] = []
 
     for path_str in load_string_list(search.get("reference_images", [])):
@@ -426,6 +470,7 @@ def load_reference_embeddings(search: Dict[str, Any]) -> List[np.ndarray]:
             print(f"[WARN] failed to load reference image {path}: {exc}")
 
     REFERENCE_EMBEDDINGS[search_id] = refs
+    add_timing(f"load_reference_embeddings:{search_id}", started)
     return refs
 
 
@@ -433,25 +478,36 @@ def image_similarity_score(item: Dict[str, Any], ref_embeddings: List[np.ndarray
     if not ref_embeddings:
         return 0.0
 
+    started = perf_counter()
     image_url = get_item_image_url(item)
     image = download_image(image_url)
     if image is None:
+        add_timing("image_similarity_score", started)
         return 0.0
 
     try:
         item_embedding = encode_pil_image(image)
+        score = max(cosine_similarity(item_embedding, ref) for ref in ref_embeddings)
+        return score
     except Exception as exc:
         print(f"[WARN] image encode failed url={image_url} err={exc}")
         return 0.0
-
-    return max(cosine_similarity(item_embedding, ref) for ref in ref_embeddings)
+    finally:
+        add_timing("image_similarity_score", started)
+        inc_counter("image_similarity_calls_total")
 
 
 def fetch_items_for_keyword(search: Dict[str, Any], keyword: str) -> List[Dict[str, Any]]:
+    started = perf_counter()
+    inc_counter("http_requests_total")
+    inc_counter("vinted_catalog_calls_total")
+
     params = build_params(search, keyword)
     response = SESSION.get(VINTED_CATALOG_URL, params=params, timeout=HTTP_TIMEOUT)
     response.raise_for_status()
     payload = response.json()
+
+    add_timing("http_vinted_catalog", started)
     return extract_items(payload)
 
 
@@ -481,16 +537,21 @@ def get_search_keywords(search: Dict[str, Any]) -> List[str]:
 
 
 def search_items(search: Dict[str, Any]) -> List[Dict[str, Any]]:
+    started = perf_counter()
     results: List[Dict[str, Any]] = []
     seen_local: Set[str] = set()
     deduped_keywords = get_search_keywords(search)
+    total_sleep_time = 0.0
 
     for keyword in deduped_keywords:
+        keyword_started = perf_counter()
+
         try:
             items = fetch_items_for_keyword(search, keyword)
             print(f"[DEBUG] search={search.get('id')} keyword={keyword!r} items={len(items)}")
         except Exception as exc:
             print(f"[WARN] search={search.get('id')} keyword={keyword!r} failed: {exc}")
+            add_timing(f"search_keyword:{search.get('id')}:{keyword}", keyword_started)
             continue
 
         for item in items:
@@ -502,15 +563,24 @@ def search_items(search: Dict[str, Any]) -> List[Dict[str, Any]]:
             seen_local.add(item_id)
             results.append(item)
 
-        time.sleep(float(search.get("request_delay") or REQUEST_DELAY))
+        delay = float(search.get("request_delay") or REQUEST_DELAY)
+        total_sleep_time += delay
+        time.sleep(delay)
+        add_timing(f"search_keyword:{search.get('id')}:{keyword}", keyword_started)
+
+    if total_sleep_time > 0:
+        TIMINGS["request_sleep"] = TIMINGS.get("request_sleep", 0.0) + total_sleep_time
 
     if deduped_keywords and search.get("require_keyword_match", True):
+        filter_started = perf_counter()
         before_count = len(results)
         results = [item for item in results if matches_keywords(search, item, deduped_keywords)]
         removed_count = before_count - len(results)
         if removed_count > 0:
             print(f"[INFO] search={search.get('id')} keyword_filter_removed={removed_count}")
+        add_timing(f"keyword_match_filter:{search.get('id')}", filter_started)
 
+    add_timing(f"search_items:{search.get('id')}", started)
     return results
 
 
@@ -536,12 +606,15 @@ def filter_by_price(search: Dict[str, Any], items: List[Dict[str, Any]]) -> List
 
 
 def apply_image_filter(search: Dict[str, Any], items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    started = perf_counter()
     ref_embeddings = load_reference_embeddings(search)
     if not ref_embeddings:
+        add_timing(f"apply_image_filter:{search.get('id')}", started)
         return items
 
     threshold = float(search.get("image_similarity_threshold") or 0)
     if threshold <= 0:
+        add_timing(f"apply_image_filter:{search.get('id')}", started)
         return items
 
     manual_keywords = get_search_keywords(search)
@@ -561,6 +634,7 @@ def apply_image_filter(search: Dict[str, Any], items: List[Dict[str, Any]]) -> L
     print(
         f"[INFO] search={search.get('id')} image_scored={scored} kept={len(kept)} threshold={threshold}"
     )
+    add_timing(f"apply_image_filter:{search.get('id')}", started)
     return kept
 
 
@@ -642,6 +716,10 @@ def send_telegram_message(text: str) -> None:
         print("[WARN] Brak TELEGRAM_BOT_TOKEN lub TELEGRAM_CHAT_ID, pomijam wysyłkę.")
         return
 
+    started = perf_counter()
+    inc_counter("http_requests_total")
+    inc_counter("telegram_calls_total")
+
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     payload = {
         "chat_id": TELEGRAM_CHAT_ID,
@@ -652,16 +730,22 @@ def send_telegram_message(text: str) -> None:
 
     response = SESSION.post(url, json=payload, timeout=HTTP_TIMEOUT)
     response.raise_for_status()
+    add_timing("telegram_send", started)
 
 
 def main() -> None:
-    warmup_session()
+    total_started = perf_counter()
 
+    config_started = perf_counter()
+    warmup_session()
     config = load_config()
     searches = config.get("searches", [])
     global_exclude_keywords = load_string_list(config.get("exclude_keywords", []))
+    add_timing("bootstrap", config_started)
 
+    state_started = perf_counter()
     state = load_state()
+    add_timing("load_state", state_started)
 
     seen_global: Set[str] = set(str(x) for x in state.get("seen_ids", []))
     seen_by_search: Dict[str, Set[str]] = {
@@ -680,41 +764,63 @@ def main() -> None:
             print("[WARN] Pomijam search bez id")
             continue
 
+        search_started = perf_counter()
         print(f"[INFO] Running search: {search_id}")
 
         per_search_exclude = load_string_list(search.get("exclude_keywords", []) or [])
         exclude_keywords = global_exclude_keywords + per_search_exclude
 
+        step_started = perf_counter()
         items = search_items(search)
+        add_timing(f"step_search_items:{search_id}", step_started)
+
+        step_started = perf_counter()
         items = filter_by_price(search, items)
+        add_timing(f"step_filter_by_price:{search_id}", step_started)
 
         if exclude_keywords:
+            step_started = perf_counter()
             before_count = len(items)
             items = [item for item in items if not should_exclude_item(search, item, exclude_keywords)]
             filtered_out = before_count - len(items)
             if filtered_out > 0:
                 print(f"[INFO] search={search_id} excluded={filtered_out}")
+            add_timing(f"step_exclude_filter:{search_id}", step_started)
 
         if search.get("reference_images"):
+            step_started = perf_counter()
             items = apply_image_filter(search, items)
+            add_timing(f"step_image_filter:{search_id}", step_started)
 
+        step_started = perf_counter()
         new_items = filter_new_items(search_id, items, seen_global, seen_by_search)
+        add_timing(f"step_filter_new:{search_id}", step_started)
 
         print(f"[INFO] search={search_id} fetched={len(items)} new={len(new_items)}")
 
         if new_items:
+            step_started = perf_counter()
             alert_text = format_alert(search, new_items)
             send_telegram_message(alert_text)
             all_alerts_sent += 1
+            add_timing(f"step_alerting:{search_id}", step_started)
 
+        step_started = perf_counter()
         mark_items_seen(search_id, items, seen_global, seen_by_search)
+        add_timing(f"step_mark_seen:{search_id}", step_started)
 
+        add_timing(f"full_search:{search_id}", search_started)
+
+    save_started = perf_counter()
     state["seen_ids"] = sorted(seen_global)
     state["seen_by_search"] = {k: sorted(v) for k, v in seen_by_search.items()}
     state["updated_at"] = int(time.time())
     save_state(state)
+    add_timing("save_state", save_started)
 
+    add_timing("main_total", total_started)
     print(f"[INFO] Done. Alerts sent: {all_alerts_sent}")
+    log_timing_summary()
 
 
 if __name__ == "__main__":
