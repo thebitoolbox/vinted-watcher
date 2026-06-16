@@ -7,3 +7,4 @@ numpy==2.1.1
 torch==2.4.1
 open-clip-torch==2.26.1
 curl-cffi==0.7.1
+langdetect==1.0.9
