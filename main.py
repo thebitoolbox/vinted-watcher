@@ -711,14 +711,10 @@ def format_alert(search: Dict[str, Any], new_items: List[Dict[str, Any]]) -> str
     return chr(10).join(parts)
 
 
-def send_telegram_message(text: str) -> None:
+def send_telegram_message(text: str) -> bool:
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         print("[WARN] Brak TELEGRAM_BOT_TOKEN lub TELEGRAM_CHAT_ID, pomijam wysyłkę.")
-        return
-
-    started = perf_counter()
-    inc_counter("http_requests_total")
-    inc_counter("telegram_calls_total")
+        return False
 
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     payload = {
@@ -728,9 +724,31 @@ def send_telegram_message(text: str) -> None:
         "disable_web_page_preview": True,
     }
 
-    response = SESSION.post(url, json=payload, timeout=HTTP_TIMEOUT)
-    response.raise_for_status()
-    add_timing("telegram_send", started)
+    retries = 2
+    telegram_timeout = int(os.getenv("TELEGRAM_TIMEOUT", "60"))
+
+    for attempt in range(1, retries + 1):
+        started = perf_counter()
+        inc_counter("http_requests_total")
+        inc_counter("telegram_calls_total")
+
+        try:
+            response = SESSION.post(url, json=payload, timeout=telegram_timeout)
+            response.raise_for_status()
+            add_timing("telegram_send", started)
+            print(f"[INFO] Telegram sent on attempt {attempt}")
+            return True
+        except Exception as exc:
+            add_timing("telegram_send", started)
+            print(f"[WARN] Telegram send failed attempt={attempt}/{retries} err={exc}")
+
+            if attempt < retries:
+                sleep_s = 5 * attempt
+                print(f"[INFO] Retrying Telegram in {sleep_s}s")
+                time.sleep(sleep_s)
+
+    print("[ERROR] Telegram message not sent after retries")
+    return False
 
 
 def main() -> None:
@@ -801,8 +819,11 @@ def main() -> None:
         if new_items:
             step_started = perf_counter()
             alert_text = format_alert(search, new_items)
-            send_telegram_message(alert_text)
-            all_alerts_sent += 1
+            sent = send_telegram_message(alert_text)
+            if sent:
+                all_alerts_sent += 1
+            else:
+                print(f"[WARN] search={search_id} telegram_send_failed")
             add_timing(f"step_alerting:{search_id}", step_started)
 
         step_started = perf_counter()
