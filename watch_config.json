@@ -1447,6 +1447,280 @@
       ],
       "image_similarity_threshold": 0.85,
       "request_delay": 0.8
+    },
+      {
+      "id": "75192_text",
+      "name": "75192 Millennium Falcon | brać do 2500 zł",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "75192",
+      "manual_keywords": [
+        "75192",
+        "Millennium Falcon",
+        "UCS Falcon",
+        "Sokół Millennium",
+        "Sokol Millennium",
+        "Star Wars UCS"
+      ],
+      "buy_below": 2500,
+      "price_to": 4000,
+      "request_delay": 0.8,
+      "enabled": true
+    },
+    {
+      "id": "10295_text",
+      "name": "10295 Porsche 911 | brać do 850 zł",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "10295",
+      "manual_keywords": [
+        "10295",
+        "Porsche 911",
+        "LEGO Porsche 911",
+        "Icons Porsche",
+        "Creator Expert Porsche"
+      ],
+      "buy_below": 850,
+      "price_to": 1400,
+      "request_delay": 0.8,
+      "enabled": true
+    },
+    {
+      "id": "21318_text",
+      "name": "21318 Tree House | brać do 700 zł",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "21318",
+      "manual_keywords": [
+        "21318",
+        "Tree House",
+        "LEGO Tree House",
+        "Ideas Tree House",
+        "Domek na drzewie"
+      ],
+      "buy_below": 700,
+      "price_to": 1200,
+      "request_delay": 0.8,
+      "enabled": true
+    },
+    {
+      "id": "10256_text",
+      "name": "10256 Taj Mahal | brać do 1200 zł",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "10256",
+      "manual_keywords": [
+        "10256",
+        "Taj Mahal",
+        "LEGO Taj Mahal",
+        "Creator Expert Taj Mahal"
+      ],
+      "buy_below": 1200,
+      "price_to": 2000,
+      "request_delay": 0.8,
+      "enabled": true
+    },
+    {
+      "id": "10316_text",
+      "name": "10316 Rivendell | brać do 1200 zł",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "10316",
+      "manual_keywords": [
+        "10316",
+        "Rivendell",
+        "LEGO Rivendell",
+        "Lord of the Rings Rivendell"
+      ],
+      "buy_below": 1200,
+      "price_to": 2200,
+      "request_delay": 0.8,
+      "enabled": true
+    },
+    {
+      "id": "21021_text",
+      "name": "21021 Marina Bay Sands | brać do 350 zł",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "21021",
+      "manual_keywords": [
+        "21021",
+        "Marina Bay Sands",
+        "Singapore skyline",
+        "Sands SkyPark"
+      ],
+      "buy_below": 350,
+      "price_to": 700,
+      "request_delay": 0.8,
+      "enabled": true
+    },
+    {
+      "id": "21063_text",
+      "name": "21063 Neuschwanstein Castle | brać do 450 zł",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "21063",
+      "manual_keywords": [
+        "21063",
+        "Neuschwanstein Castle",
+        "Schloss Neuschwanstein",
+        "LEGO Neuschwanstein"
+      ],
+      "buy_below": 450,
+      "price_to": 900,
+      "request_delay": 0.8,
+      "enabled": true
+    },
+    {
+      "id": "75274_text",
+      "name": "75274 TIE Fighter Pilot Helmet | brać do 220 zł",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "75274",
+      "manual_keywords": [
+        "75274",
+        "TIE Fighter Pilot Helmet",
+        "tie fighter helmet",
+        "star wars helmet"
+      ],
+      "buy_below": 220,
+      "price_to": 500,
+      "request_delay": 0.8,
+      "enabled": true
+    },
+      {
+      "id": "sw_micro_text",
+      "name": "Star Wars microfighters | brać do 40 zł",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "star wars microfighter",
+      "manual_keywords": [
+        "microfighter",
+        "microfighters",
+        "lego star wars microfighter",
+        "star wars mini",
+        "lego star wars"
+      ],
+      "buy_below": 40,
+      "price_to": 120,
+      "request_delay": 0.8
+    },
+    {
+      "id": "speed_text",
+      "name": "Speed Champions | brać do 70 zł",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "speed champions",
+      "manual_keywords": [
+        "speed champions",
+        "lego speed champions",
+        "sc lego",
+        "sports car",
+        "race car",
+        "lego car"
+      ],
+      "buy_below": 70,
+      "price_to": 220,
+      "request_delay": 0.8
+    },
+    {
+      "id": "hp_text",
+      "name": "Harry Potter | brać do 80 zł",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "lego harry potter",
+      "manual_keywords": [
+        "harry potter lego",
+        "lego harry potter",
+        "wizarding world",
+        "hogwarts",
+        "harry potter"
+      ],
+      "buy_below": 80,
+      "price_to": 250,
+      "request_delay": 0.8
+    },
+    {
+      "id": "technic_text",
+      "name": "Technic small/medium | brać do 90 zł",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "lego technic",
+      "manual_keywords": [
+        "lego technic",
+        "technic",
+        "car",
+        "vehicle",
+        "bike",
+        "truck"
+      ],
+      "buy_below": 90,
+      "price_to": 280,
+      "request_delay": 0.8
+    },
+    {
+      "id": "mario_text",
+      "name": "Super Mario | brać do 70 zł",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "lego super mario",
+      "manual_keywords": [
+        "super mario lego",
+        "lego super mario",
+        "mario",
+        "nintendo"
+      ],
+      "buy_below": 70,
+      "price_to": 240,
+      "request_delay": 0.8
+    },
+    {
+      "id": "ninjago_text",
+      "name": "Ninjago | brać do 60 zł",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "lego ninjago",
+      "manual_keywords": [
+        "ninjago",
+        "lego ninjago",
+        "kai",
+        "lloyd",
+        "ninja"
+      ],
+      "buy_below": 60,
+      "price_to": 220,
+      "request_delay": 0.8
+    },
+    {
+      "id": "ideas_small_text",
+      "name": "Ideas small | brać do 100 zł",
+      "enabled": true,
+      "translate": true,
+      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
+      "base_query": "lego ideas",
+      "manual_keywords": [
+        "lego ideas",
+        "ideas",
+        "ideas set",
+        "lego ideas set"
+      ],
+      "buy_below": 100,
+      "price_to": 350,
+      "request_delay": 0.8
     }
 
   ]
