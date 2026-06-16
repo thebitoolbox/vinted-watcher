@@ -54,6 +54,8 @@ MODEL = MODEL.to(DEVICE).eval()
 REFERENCE_EMBEDDINGS: Dict[str, List[np.ndarray]] = {}
 TIMINGS: Dict[str, float] = {}
 COUNTERS: Dict[str, int] = {}
+SEARCH_STATS: Dict[str, Dict[str, int]] = {}
+SEARCH_TIMINGS: Dict[str, Dict[str, float]] = {}
 LAST_VINTED_REQUEST_TS = 0.0
 
 
@@ -68,6 +70,94 @@ def inc_counter(name: str, value: int = 1) -> None:
 def add_sleep_timing(seconds: float) -> None:
     if seconds > 0:
         TIMINGS["request_sleep"] = TIMINGS.get("request_sleep", 0.0) + seconds
+
+
+def ensure_search_stats(search_id: str) -> Dict[str, int]:
+    if search_id not in SEARCH_STATS:
+        SEARCH_STATS[search_id] = {
+            "requests": 0,
+            "keywords_total": 0,
+            "keywords_ok": 0,
+            "keywords_failed": 0,
+            "items_after_fetch": 0,
+            "items_after_filters": 0,
+            "new_items": 0,
+            "excluded_items": 0,
+            "alerts_sent": 0,
+        }
+    return SEARCH_STATS[search_id]
+
+
+def ensure_search_timing(search_id: str) -> Dict[str, float]:
+    if search_id not in SEARCH_TIMINGS:
+        SEARCH_TIMINGS[search_id] = {
+            "total": 0.0,
+            "search_items": 0.0,
+            "exclude_filter": 0.0,
+            "image_filter": 0.0,
+            "alerting": 0.0,
+        }
+    return SEARCH_TIMINGS[search_id]
+
+
+def add_search_timing(search_id: str, key: str, seconds: float) -> None:
+    bucket = ensure_search_timing(search_id)
+    bucket[key] = bucket.get(key, 0.0) + seconds
+
+
+def log_search_summary(search_id: str) -> None:
+    stats = SEARCH_STATS.get(search_id, {})
+    timing = SEARCH_TIMINGS.get(search_id, {})
+
+    print(
+        "[SEARCH_SUMMARY] "
+        f"id={search_id} "
+        f"total={timing.get('total', 0.0):.2f}s "
+        f"search_items={timing.get('search_items', 0.0):.2f}s "
+        f"exclude_filter={timing.get('exclude_filter', 0.0):.2f}s "
+        f"image_filter={timing.get('image_filter', 0.0):.2f}s "
+        f"alerting={timing.get('alerting', 0.0):.2f}s "
+        f"requests={stats.get('requests', 0)} "
+        f"keywords_total={stats.get('keywords_total', 0)} "
+        f"keywords_ok={stats.get('keywords_ok', 0)} "
+        f"keywords_failed={stats.get('keywords_failed', 0)} "
+        f"items_after_fetch={stats.get('items_after_fetch', 0)} "
+        f"items_after_filters={stats.get('items_after_filters', 0)} "
+        f"excluded_items={stats.get('excluded_items', 0)} "
+        f"new_items={stats.get('new_items', 0)} "
+        f"alerts_sent={stats.get('alerts_sent', 0)}"
+    )
+
+
+def log_search_ranking(limit: int = 15) -> None:
+    print("[SEARCH_RANK] ---- slowest searches ----")
+
+    ranked = sorted(
+        SEARCH_TIMINGS.items(),
+        key=lambda item: item[1].get("total", 0.0),
+        reverse=True,
+    )
+
+    for idx, (search_id, timing) in enumerate(ranked[:limit], start=1):
+        stats = SEARCH_STATS.get(search_id, {})
+        total = timing.get("total", 0.0)
+        requests = stats.get("requests", 0)
+        new_items = stats.get("new_items", 0)
+        keywords_total = stats.get("keywords_total", 0)
+        avg_per_request = total / requests if requests else 0.0
+        avg_per_keyword = total / keywords_total if keywords_total else 0.0
+
+        print(
+            "[SEARCH_RANK] "
+            f"#{idx} "
+            f"id={search_id} "
+            f"total={total:.2f}s "
+            f"requests={requests} "
+            f"keywords_total={keywords_total} "
+            f"new_items={new_items} "
+            f"avg_per_request={avg_per_request:.2f}s "
+            f"avg_per_keyword={avg_per_keyword:.2f}s"
+        )
 
 
 def log_timing_summary() -> None:
@@ -579,12 +669,16 @@ def fetch_items_for_keyword(search: Dict[str, Any], keyword: str) -> List[Dict[s
     base_delay = float(search.get("retry_delay") or 2.0)
     last_exc: Optional[Exception] = None
 
+    search_id = str(search.get("id") or "").strip()
+    stats = ensure_search_stats(search_id)
+
     for attempt in range(1, retries + 1):
         throttle_vinted_requests()
 
         started = perf_counter()
         inc_counter("http_requests_total")
         inc_counter("vinted_catalog_calls_total")
+        stats["requests"] += 1
 
         response = None
         try:
@@ -672,14 +766,21 @@ def search_items(search: Dict[str, Any]) -> List[Dict[str, Any]]:
     seen_local: Set[str] = set()
     deduped_keywords = get_search_keywords(search)
 
+    search_id = str(search.get("id") or "").strip()
+    stats = ensure_search_stats(search_id)
+    stats["keywords_total"] = len(deduped_keywords)
+
     for keyword in deduped_keywords:
         keyword_started = perf_counter()
 
         try:
             items = fetch_items_for_keyword(search, keyword)
             print(f"[DEBUG] search={search.get('id')} keyword={keyword!r} items={len(items)}")
+            stats["keywords_ok"] += 1
+            stats["items_after_fetch"] += len(items)
         except Exception as exc:
             print(f"[WARN] search={search.get('id')} keyword={keyword!r} failed: {exc}")
+            stats["keywords_failed"] += 1
             add_timing(f"search_keyword:{search.get('id')}:{keyword}", keyword_started)
             continue
 
@@ -904,15 +1005,19 @@ def main() -> None:
             print("[WARN] Pomijam search bez id")
             continue
 
-        search_started = perf_counter()
         print(f"[INFO] Running search: {search_id}")
+        ensure_search_stats(search_id)
+        ensure_search_timing(search_id)
 
+        search_started = perf_counter()
         per_search_exclude = load_string_list(search.get("exclude_keywords", []) or [])
         exclude_keywords = global_exclude_keywords + per_search_exclude
 
         step_started = perf_counter()
         items = search_items(search)
+        elapsed = perf_counter() - step_started
         add_timing(f"step_search_items:{search_id}", step_started)
+        add_search_timing(search_id, "search_items", elapsed)
 
         if exclude_keywords:
             step_started = perf_counter()
@@ -921,16 +1026,26 @@ def main() -> None:
             filtered_out = before_count - len(items)
             if filtered_out > 0:
                 print(f"[INFO] search={search_id} excluded={filtered_out}")
+            stats = ensure_search_stats(search_id)
+            stats["excluded_items"] += filtered_out
+            elapsed = perf_counter() - step_started
             add_timing(f"step_exclude_filter:{search_id}", step_started)
+            add_search_timing(search_id, "exclude_filter", elapsed)
 
         if search.get("reference_images"):
             step_started = perf_counter()
             items = apply_image_filter(search, items)
+            elapsed = perf_counter() - step_started
             add_timing(f"step_image_filter:{search_id}", step_started)
+            add_search_timing(search_id, "image_filter", elapsed)
 
         step_started = perf_counter()
         new_items = filter_new_items(search_id, items, seen_global, seen_by_search)
         add_timing(f"step_filter_new:{search_id}", step_started)
+
+        stats = ensure_search_stats(search_id)
+        stats["items_after_filters"] = len(items)
+        stats["new_items"] = len(new_items)
 
         print(f"[INFO] search={search_id} fetched={len(items)} new={len(new_items)}")
 
@@ -940,15 +1055,20 @@ def main() -> None:
             sent = send_telegram_message(alert_text)
             if sent:
                 all_alerts_sent += 1
+                stats["alerts_sent"] += 1
             else:
                 print(f"[WARN] search={search_id} telegram_send_failed")
+            elapsed = perf_counter() - step_started
             add_timing(f"step_alerting:{search_id}", step_started)
+            add_search_timing(search_id, "alerting", elapsed)
 
         step_started = perf_counter()
         mark_items_seen(search_id, items, seen_global, seen_by_search)
         add_timing(f"step_mark_seen:{search_id}", step_started)
 
         add_timing(f"full_search:{search_id}", search_started)
+        add_search_timing(search_id, "total", perf_counter() - search_started)
+        log_search_summary(search_id)
 
     save_started = perf_counter()
     state["seen_ids"] = sorted(seen_global)
@@ -959,6 +1079,7 @@ def main() -> None:
 
     add_timing("main_total", total_started)
     print(f"[INFO] Done. Alerts sent: {all_alerts_sent}")
+    log_search_ranking(20)
     log_timing_summary()
 
 
