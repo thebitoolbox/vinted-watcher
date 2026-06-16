@@ -1,6 +1,7 @@
 import html
 import json
 import os
+import random
 import time
 import unicodedata
 from functools import lru_cache
@@ -35,6 +36,8 @@ TRANSLATE_TARGET_LANG = os.getenv("TRANSLATE_TARGET_LANG", "en").strip() or "en"
 TRANSLATE_MAX_TEXT_LEN = int(os.getenv("TRANSLATE_MAX_TEXT_LEN", "1200"))
 SKIP_TRANSLATE_LANGS = {"pl", "en"}
 
+MIN_VINTED_INTERVAL = float(os.getenv("MIN_VINTED_INTERVAL", "0.6"))
+
 VINTED_BASE_URL = "https://www.vinted.pl"
 VINTED_CATALOG_URL = "https://www.vinted.pl/api/v2/catalog/items"
 
@@ -51,6 +54,7 @@ MODEL = MODEL.to(DEVICE).eval()
 REFERENCE_EMBEDDINGS: Dict[str, List[np.ndarray]] = {}
 TIMINGS: Dict[str, float] = {}
 COUNTERS: Dict[str, int] = {}
+LAST_VINTED_REQUEST_TS = 0.0
 
 
 def add_timing(name: str, started_at: float) -> None:
@@ -59,6 +63,11 @@ def add_timing(name: str, started_at: float) -> None:
 
 def inc_counter(name: str, value: int = 1) -> None:
     COUNTERS[name] = COUNTERS.get(name, 0) + value
+
+
+def add_sleep_timing(seconds: float) -> None:
+    if seconds > 0:
+        TIMINGS["request_sleep"] = TIMINGS.get("request_sleep", 0.0) + seconds
 
 
 def log_timing_summary() -> None:
@@ -94,6 +103,42 @@ def build_session() -> requests.Session:
 
 
 SESSION = build_session()
+
+
+def throttle_vinted_requests() -> None:
+    global LAST_VINTED_REQUEST_TS
+
+    now = perf_counter()
+    elapsed = now - LAST_VINTED_REQUEST_TS
+
+    if elapsed < MIN_VINTED_INTERVAL:
+        sleep_for = MIN_VINTED_INTERVAL - elapsed
+        time.sleep(sleep_for)
+        add_sleep_timing(sleep_for)
+
+    LAST_VINTED_REQUEST_TS = perf_counter()
+
+
+def get_retry_after_seconds(response: Any) -> Optional[float]:
+    try:
+        if response is None:
+            return None
+
+        headers = getattr(response, "headers", {}) or {}
+        value = headers.get("Retry-After")
+        if not value:
+            return None
+
+        return float(value)
+    except Exception:
+        return None
+
+
+def get_retry_delay(attempt: int, base_delay: float = 2.0, cap: float = 30.0) -> float:
+    delay = base_delay * (2 ** (attempt - 1))
+    delay = min(delay, cap)
+    jitter = random.uniform(0.3, 1.2)
+    return delay + jitter
 
 
 def warmup_session() -> None:
@@ -528,40 +573,46 @@ def image_similarity_score(item: Dict[str, Any], ref_embeddings: List[np.ndarray
         inc_counter("image_similarity_calls_total")
 
 
-def get_retry_delay(attempt: int, base_delay: float = 1.0) -> float:
-    return base_delay * (2 ** (attempt - 1))
-
-
 def fetch_items_for_keyword(search: Dict[str, Any], keyword: str) -> List[Dict[str, Any]]:
     params = build_params(search, keyword)
-    retries = int(search.get("retries") or 3)
-    base_delay = float(search.get("retry_delay") or 1.0)
+    retries = int(search.get("retries") or 4)
+    base_delay = float(search.get("retry_delay") or 2.0)
     last_exc: Optional[Exception] = None
 
     for attempt in range(1, retries + 1):
+        throttle_vinted_requests()
+
         started = perf_counter()
         inc_counter("http_requests_total")
         inc_counter("vinted_catalog_calls_total")
 
+        response = None
         try:
             response = SESSION.get(VINTED_CATALOG_URL, params=params, timeout=HTTP_TIMEOUT)
             response.raise_for_status()
             payload = response.json()
             add_timing("http_vinted_catalog", started)
             return extract_items(payload)
+
         except Exception as exc:
             add_timing("http_vinted_catalog", started)
             last_exc = exc
+
+            retry_after = get_retry_after_seconds(response)
             print(
                 f"[WARN] search={search.get('id')} keyword={keyword!r} "
                 f"attempt={attempt}/{retries} failed: {exc}"
             )
 
             if attempt < retries:
-                delay = get_retry_delay(attempt, base_delay)
+                if retry_after is not None:
+                    delay = retry_after
+                else:
+                    delay = get_retry_delay(attempt, base_delay)
+
                 print(f"[INFO] retrying in {delay:.1f}s")
                 time.sleep(delay)
-                TIMINGS["request_sleep"] = TIMINGS.get("request_sleep", 0.0) + delay
+                add_sleep_timing(delay)
 
     if last_exc:
         raise last_exc
@@ -643,7 +694,7 @@ def search_items(search: Dict[str, Any]) -> List[Dict[str, Any]]:
 
         if REQUEST_DELAY > 0:
             time.sleep(REQUEST_DELAY)
-            TIMINGS["request_sleep"] = TIMINGS.get("request_sleep", 0.0) + REQUEST_DELAY
+            add_sleep_timing(REQUEST_DELAY)
 
         add_timing(f"search_keyword:{search.get('id')}:{keyword}", keyword_started)
 
@@ -813,10 +864,10 @@ def send_telegram_message(text: str) -> bool:
             print(f"[WARN] Telegram send failed attempt={attempt}/{retries} err={exc}")
 
             if attempt < retries:
-                delay = get_retry_delay(attempt, 2.0)
+                delay = get_retry_delay(attempt, 2.0, 10.0)
                 print(f"[INFO] Retrying Telegram in {delay:.1f}s")
                 time.sleep(delay)
-                TIMINGS["request_sleep"] = TIMINGS.get("request_sleep", 0.0) + delay
+                add_sleep_timing(delay)
 
     print("[ERROR] Telegram message not sent after retries")
     return False
