@@ -1473,25 +1473,6 @@
       "enabled": true
     },
     {
-      "id": "10295_text",
-      "name": "10295 Porsche 911 | brać do 850 zł",
-      "enabled": true,
-      "translate": true,
-      "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
-      "base_query": "10295",
-      "manual_keywords": [
-        "10295",
-        "Porsche 911",
-        "LEGO Porsche 911",
-        "Icons Porsche",
-        "Creator Expert Porsche"
-      ],
-      "buy_below": 850,
-      "price_to": 1400,
-      "request_delay": 0.8,
-      "enabled": true
-    },
-    {
       "id": "21318_text",
       "name": "21318 Tree House | brać do 700 zł",
       "enabled": true,
