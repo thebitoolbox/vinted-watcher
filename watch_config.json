@@ -1580,6 +1580,215 @@
       "price_to": 500,
       "request_delay": 0.8,
       "enabled": true
+    },
+      {
+      "id": "lego_modular_early",
+      "name": "LEGO Modular early",
+      "enabled": true,
+      "base_query": "lego modular",
+      "manual_keywords": [
+        "10182",
+        "Café Corner",
+        "10190",
+        "Market Street",
+        "10185",
+        "Green Grocer",
+        "10197",
+        "Fire Brigade"
+      ],
+      "require_keyword_match": true,
+      "per_page": 16,
+      "order": "newest_first",
+      "translate": false,
+      "exclude_keywords": []
+    },
+    {
+      "id": "lego_modular_mid_a",
+      "name": "LEGO Modular mid A",
+      "enabled": true,
+      "base_query": "lego modular",
+      "manual_keywords": [
+        "10211",
+        "Grand Emporium",
+        "10218",
+        "Pet Shop",
+        "10224",
+        "Town Hall",
+        "10232",
+        "Palace Cinema"
+      ],
+      "require_keyword_match": true,
+      "per_page": 16,
+      "order": "newest_first",
+      "translate": false,
+      "exclude_keywords": []
+    },
+    {
+      "id": "lego_modular_mid_b",
+      "name": "LEGO Modular mid B",
+      "enabled": true,
+      "base_query": "lego modular",
+      "manual_keywords": [
+        "10243",
+        "Parisian Restaurant",
+        "10246",
+        "Detective's Office",
+        "10251",
+        "Brick Bank",
+        "10255",
+        "Assembly Square"
+      ],
+      "require_keyword_match": true,
+      "per_page": 16,
+      "order": "newest_first",
+      "translate": false,
+      "exclude_keywords": []
+    },
+    {
+      "id": "lego_modular_recent",
+      "name": "LEGO Modular recent",
+      "enabled": true,
+      "base_query": "lego modular",
+      "manual_keywords": [
+        "10260",
+        "Downtown Diner",
+        "10264",
+        "Corner Garage",
+        "10270",
+        "Bookshop",
+        "10278",
+        "Police Station"
+      ],
+      "require_keyword_match": true,
+      "per_page": 16,
+      "order": "newest_first",
+      "translate": false,
+      "exclude_keywords": []
+    },
+    {
+      "id": "lego_modular_latest",
+      "name": "LEGO Modular latest",
+      "enabled": true,
+      "base_query": "lego modular",
+      "manual_keywords": [
+        "10297",
+        "Boutique Hotel",
+        "10312",
+        "Jazz Club",
+        "10326",
+        "Natural History Museum",
+        "10350",
+        "Tudor Corner"
+      ],
+      "require_keyword_match": true,
+      "per_page": 16,
+      "order": "newest_first",
+      "translate": false,
+      "exclude_keywords": []
+    },
+
+    {
+      "id": "marvel_infinity_saga_2021",
+      "name": "Marvel Infinity Saga 2021",
+      "enabled": true,
+      "base_query": "lego marvel",
+      "manual_keywords": [
+        "76186",
+        "Black Panther Dragon Flyer",
+        "76189",
+        "Captain America and Hydra Face-Off",
+        "76190",
+        "Iron Man: Iron Monger Mayhem",
+        "76191",
+        "Infinity Gauntlet"
+      ],
+      "require_keyword_match": true,
+      "per_page": 16,
+      "order": "newest_first",
+      "translate": false,
+      "exclude_keywords": []
+    },
+    {
+      "id": "marvel_infinity_saga_2021_b",
+      "name": "Marvel Infinity Saga 2021 B",
+      "enabled": true,
+      "base_query": "lego marvel",
+      "manual_keywords": [
+        "76192",
+        "Avengers: Endgame Final Battle",
+        "76193",
+        "The Guardians' Ship",
+        "76200",
+        "Bro Thor's New Asgard",
+        "76209",
+        "Thor's Hammer"
+      ],
+      "require_keyword_match": true,
+      "per_page": 16,
+      "order": "newest_first",
+      "translate": false,
+      "exclude_keywords": []
+    },
+    {
+      "id": "marvel_infinity_saga_2022_2023",
+      "name": "Marvel Infinity Saga 2022 2023",
+      "enabled": true,
+      "base_query": "lego marvel",
+      "manual_keywords": [
+        "76210",
+        "Hulkbuster",
+        "76216",
+        "Iron Man Armoury",
+        "76217",
+        "I am Groot",
+        "76223",
+        "Nano Gauntlet"
+      ],
+      "require_keyword_match": true,
+      "per_page": 16,
+      "order": "newest_first",
+      "translate": false,
+      "exclude_keywords": []
+    },
+    {
+      "id": "marvel_infinity_saga_recent",
+      "name": "Marvel Infinity Saga recent",
+      "enabled": true,
+      "base_query": "lego marvel",
+      "manual_keywords": [
+        "76247",
+        "The Hulkbuster: The Battle of Wakanda",
+        "76248",
+        "The Avengers Quinjet",
+        "76251",
+        "Star-Lord's Helmet",
+        "76262",
+        "Captain America's Shield"
+      ],
+      "require_keyword_match": true,
+      "per_page": 16,
+      "order": "newest_first",
+      "translate": false,
+      "exclude_keywords": []
+    },
+    {
+      "id": "marvel_infinity_saga_latest",
+      "name": "Marvel Infinity Saga latest",
+      "enabled": true,
+      "base_query": "lego marvel",
+      "manual_keywords": [
+        "76295",
+        "Helicarrier",
+        "76314",
+        "Captain America: Civil War Battle",
+        "66711",
+        "Infinity Saga Collection"
+      ],
+      "require_keyword_match": true,
+      "per_page": 16,
+      "order": "newest_first",
+      "translate": false,
+      "exclude_keywords": []
     }
   ]
 }
