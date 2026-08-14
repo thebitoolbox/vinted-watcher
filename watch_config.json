@@ -1415,27 +1415,6 @@
       "image_similarity_threshold": 0.86,
       "request_delay": 0.8
     },
-    #{
-    #  "id": "21318_image",
-     # "name": "LEGO 21318 Tree House",
-     # "enabled": true,
-     # "translate": true,
-     # "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
-     # "base_query": "21318",
-     #"manual_keywords": [
-     #   "21318",
-      #  "Tree House",
-       # "LEGO Tree House",
-        #"Ideas Tree House"
-      #],
-      #"reference_images": [
-      #  "refs/21318_front.jpg",
-      #  "refs/21318_side.jpg",
-      #  "refs/21318_angle.jpg"
-      #],
-      #"image_similarity_threshold": 0.84,
-      #"request_delay": 0.8
-    #},
     {
       "id": "10228_image",
       "name": "LEGO 10228 Haunted House",
@@ -1457,45 +1436,6 @@
       "image_similarity_threshold": 0.85,
       "request_delay": 0.8
     },
-    #  {
-    #  "id": "75192_text",
-    #  "name": "75192 Millennium Falcon | brać do 2500 zł",
-    #  "enabled": true,
-    #  "translate": true,
-    #  "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
-    #  "base_query": "75192",
-    #  "manual_keywords": [
-    #    "75192",
-    #    "Millennium Falcon",
-    #    "UCS Falcon",
-    #    "Sokół Millennium",
-    #    "Sokol Millennium",
-    #    "Star Wars UCS"
-    #  ],
-    #  "buy_below": 2500,
-    #  "price_to": 4000,
-    #  "request_delay": 0.8,
-    #  "enabled": true
-    #},
-    #{
-    #  "id": "21318_text",
-    #  "name": "21318 Tree House | brać do 700 zł",
-    #  "enabled": true,
-    #  "translate": true,
-    #  "languages": ["pl", "en", "de", "da", "sv", "cs", "ro", "sk", "lt", "hu", "hr", "fi"],
-    #  "base_query": "21318",
-    #  "manual_keywords": [
-    #    "21318",
-    #    "Tree House",
-    #    "LEGO Tree House",
-    #    "Ideas Tree House",
-    #    "Domek na drzewie"
-    #  ],
-    #  "buy_below": 700,
-    #  "price_to": 1200,
-    #  "request_delay": 0.8,
-    #  "enabled": true
-    #},
     {
       "id": "10256_text",
       "name": "10256 Taj Mahal | brać do 1200 zł",
@@ -1692,108 +1632,5 @@
       "exclude_keywords": []
     },
 
-    #{
-     # "id": "marvel_infinity_saga_2021",
-      #"name": "Marvel Infinity Saga 2021",
-      #"enabled": true,
-      #"base_query": "lego marvel",
-      #"manual_keywords": [
-       # "76186",
-        #"Black Panther Dragon Flyer",
-        #"76189",
-        #"Captain America and Hydra Face-Off",
-        #"76190",
-        #"Iron Man: Iron Monger Mayhem",
-        #"76191",
-        #"Infinity Gauntlet"
-      #],
-      #"require_keyword_match": true,
-      #"per_page": 16,
-      #"order": "newest_first",
-      #"translate": false,
-      #"exclude_keywords": []
-    #},
-    #{
-     # "id": "marvel_infinity_saga_2021_b",
-     # "name": "Marvel Infinity Saga 2021 B",
-      #"enabled": true,
-      #"base_query": "lego marvel",
-      #"manual_keywords": [
-      #  "76192",
-      #  "Avengers: Endgame Final Battle",
-      #  "76193",
-      #  "The Guardians' Ship",
-      #  "76200",
-      #  "Bro Thor's New Asgard",
-      #  "76209",
-      #  "Thor's Hammer"
-      #],
-      #"require_keyword_match": true,
-      #"per_page": 16,
-      #"order": "newest_first",
-      #"translate": false,
-      #"exclude_keywords": []
-    #},
-    #{
-    #  "id": "marvel_infinity_saga_2022_2023",
-    #  "name": "Marvel Infinity Saga 2022 2023",
-     # "enabled": true,
-      #"base_query": "lego marvel",
-      #"manual_keywords": [
-      #  "76210",
-       # "Hulkbuster",
-       # "76216",
-       # "Iron Man Armoury",
-        #"76217",
-        #"I am Groot",
-        #"76223",
-        #"Nano Gauntlet"
-      #],
-      #"require_keyword_match": true,
-      #"per_page": 16,
-      #"order": "newest_first",
-      #"translate": false,
-      #"exclude_keywords": []
-    #},
-    #{
-    #  "id": "marvel_infinity_saga_recent",
-     # "name": "Marvel Infinity Saga recent",
-     # "enabled": true,
-     # "base_query": "lego marvel",
-     # "manual_keywords": [
-     #   "76247",
-      #  "The Hulkbuster: The Battle of Wakanda",
-       # "76248",
-       # "The Avengers Quinjet",
-       # "76251",
-       # "Star-Lord's Helmet",
-       # "76262",
-       # "Captain America's Shield"
-      #],
-      #"require_keyword_match": true,
-      #"per_page": 16,
-      #"order": "newest_first",
-      #"translate": false,
-      #"exclude_keywords": []
-    #},
-    #{
-    #  "id": "marvel_infinity_saga_latest",
-    #  "name": "Marvel Infinity Saga latest",
-    #  "enabled": true,
-    #  "base_query": "lego marvel",
-     # "manual_keywords": [
-     #   "76295",
-      #  "Helicarrier",
-      #  "76314",
-      #  "Captain America: Civil War Battle",
-      #  "66711",
-       # "Infinity Saga Collection"
-      #],
-      #"require_keyword_match": true,
-      #"per_page": 16,
-      #"order": "newest_first",
-      #"translate": false,
-      #"exclude_keywords": []
-    #}
   ]
 }
