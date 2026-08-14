@@ -1692,108 +1692,108 @@
       "exclude_keywords": []
     },
 
-    {
-      "id": "marvel_infinity_saga_2021",
-      "name": "Marvel Infinity Saga 2021",
-      "enabled": true,
-      "base_query": "lego marvel",
-      "manual_keywords": [
-        "76186",
-        "Black Panther Dragon Flyer",
-        "76189",
-        "Captain America and Hydra Face-Off",
-        "76190",
-        "Iron Man: Iron Monger Mayhem",
-        "76191",
-        "Infinity Gauntlet"
-      ],
-      "require_keyword_match": true,
-      "per_page": 16,
-      "order": "newest_first",
-      "translate": false,
-      "exclude_keywords": []
-    },
-    {
-      "id": "marvel_infinity_saga_2021_b",
-      "name": "Marvel Infinity Saga 2021 B",
-      "enabled": true,
-      "base_query": "lego marvel",
-      "manual_keywords": [
-        "76192",
-        "Avengers: Endgame Final Battle",
-        "76193",
-        "The Guardians' Ship",
-        "76200",
-        "Bro Thor's New Asgard",
-        "76209",
-        "Thor's Hammer"
-      ],
-      "require_keyword_match": true,
-      "per_page": 16,
-      "order": "newest_first",
-      "translate": false,
-      "exclude_keywords": []
-    },
-    {
-      "id": "marvel_infinity_saga_2022_2023",
-      "name": "Marvel Infinity Saga 2022 2023",
-      "enabled": true,
-      "base_query": "lego marvel",
-      "manual_keywords": [
-        "76210",
-        "Hulkbuster",
-        "76216",
-        "Iron Man Armoury",
-        "76217",
-        "I am Groot",
-        "76223",
-        "Nano Gauntlet"
-      ],
-      "require_keyword_match": true,
-      "per_page": 16,
-      "order": "newest_first",
-      "translate": false,
-      "exclude_keywords": []
-    },
-    {
-      "id": "marvel_infinity_saga_recent",
-      "name": "Marvel Infinity Saga recent",
-      "enabled": true,
-      "base_query": "lego marvel",
-      "manual_keywords": [
-        "76247",
-        "The Hulkbuster: The Battle of Wakanda",
-        "76248",
-        "The Avengers Quinjet",
-        "76251",
-        "Star-Lord's Helmet",
-        "76262",
-        "Captain America's Shield"
-      ],
-      "require_keyword_match": true,
-      "per_page": 16,
-      "order": "newest_first",
-      "translate": false,
-      "exclude_keywords": []
-    },
-    {
-      "id": "marvel_infinity_saga_latest",
-      "name": "Marvel Infinity Saga latest",
-      "enabled": true,
-      "base_query": "lego marvel",
-      "manual_keywords": [
-        "76295",
-        "Helicarrier",
-        "76314",
-        "Captain America: Civil War Battle",
-        "66711",
-        "Infinity Saga Collection"
-      ],
-      "require_keyword_match": true,
-      "per_page": 16,
-      "order": "newest_first",
-      "translate": false,
-      "exclude_keywords": []
-    }
+    #{
+     # "id": "marvel_infinity_saga_2021",
+      #"name": "Marvel Infinity Saga 2021",
+      #"enabled": true,
+      #"base_query": "lego marvel",
+      #"manual_keywords": [
+       # "76186",
+        #"Black Panther Dragon Flyer",
+        #"76189",
+        #"Captain America and Hydra Face-Off",
+        #"76190",
+        #"Iron Man: Iron Monger Mayhem",
+        #"76191",
+        #"Infinity Gauntlet"
+      #],
+      #"require_keyword_match": true,
+      #"per_page": 16,
+      #"order": "newest_first",
+      #"translate": false,
+      #"exclude_keywords": []
+    #},
+    #{
+     # "id": "marvel_infinity_saga_2021_b",
+     # "name": "Marvel Infinity Saga 2021 B",
+      #"enabled": true,
+      #"base_query": "lego marvel",
+      #"manual_keywords": [
+      #  "76192",
+      #  "Avengers: Endgame Final Battle",
+      #  "76193",
+      #  "The Guardians' Ship",
+      #  "76200",
+      #  "Bro Thor's New Asgard",
+      #  "76209",
+      #  "Thor's Hammer"
+      #],
+      #"require_keyword_match": true,
+      #"per_page": 16,
+      #"order": "newest_first",
+      #"translate": false,
+      #"exclude_keywords": []
+    #},
+    #{
+    #  "id": "marvel_infinity_saga_2022_2023",
+    #  "name": "Marvel Infinity Saga 2022 2023",
+     # "enabled": true,
+      #"base_query": "lego marvel",
+      #"manual_keywords": [
+      #  "76210",
+       # "Hulkbuster",
+       # "76216",
+       # "Iron Man Armoury",
+        #"76217",
+        #"I am Groot",
+        #"76223",
+        #"Nano Gauntlet"
+      #],
+      #"require_keyword_match": true,
+      #"per_page": 16,
+      #"order": "newest_first",
+      #"translate": false,
+      #"exclude_keywords": []
+    #},
+    #{
+    #  "id": "marvel_infinity_saga_recent",
+     # "name": "Marvel Infinity Saga recent",
+     # "enabled": true,
+     # "base_query": "lego marvel",
+     # "manual_keywords": [
+     #   "76247",
+      #  "The Hulkbuster: The Battle of Wakanda",
+       # "76248",
+       # "The Avengers Quinjet",
+       # "76251",
+       # "Star-Lord's Helmet",
+       # "76262",
+       # "Captain America's Shield"
+      #],
+      #"require_keyword_match": true,
+      #"per_page": 16,
+      #"order": "newest_first",
+      #"translate": false,
+      #"exclude_keywords": []
+    #},
+    #{
+    #  "id": "marvel_infinity_saga_latest",
+    #  "name": "Marvel Infinity Saga latest",
+    #  "enabled": true,
+    #  "base_query": "lego marvel",
+     # "manual_keywords": [
+     #   "76295",
+      #  "Helicarrier",
+      #  "76314",
+      #  "Captain America: Civil War Battle",
+      #  "66711",
+       # "Infinity Saga Collection"
+      #],
+      #"require_keyword_match": true,
+      #"per_page": 16,
+      #"order": "newest_first",
+      #"translate": false,
+      #"exclude_keywords": []
+    #}
   ]
 }
